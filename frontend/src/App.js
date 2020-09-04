@@ -50,7 +50,7 @@ function App() {
       </div>
     </main>
     <footer className="footer">
-      All right reserved.
+      Doggy Delights Inc
     </footer>
   </div>
   </BrowserRouter>
