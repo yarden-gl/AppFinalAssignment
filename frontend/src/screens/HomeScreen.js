@@ -1,11 +1,10 @@
-import React  from 'react';
+import React,{ useState, useEffect }  from 'react';
 import { Link } from 'react-router-dom';
-import data from '../data';
-//import { useState, useEffect } from 'react'
-//import axios from 'axios'; //library to retrieve data from web API
+//import data from '../data';
+import axios from 'axios'; //library to retrieve data from web API
 
 function HomeScreen(props) {
-/**
+
   // Retrieve products from backend
   
   const [products, setProduct] = useState([]);
@@ -19,10 +18,10 @@ function HomeScreen(props) {
     fetchData();
     return () => {};
   },[]);
-*/
+
     return <ul className="products">
     {
-      data.products.map(product =>
+      products.map(product =>
       <li key={product.__id}>
       <div className="product">
       <Link to={'/product/' + product._id}>
