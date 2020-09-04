@@ -5,8 +5,9 @@ import axios from 'axios'; //library to retrieve data from web API
 function HomeScreen(props) {
 
   // Retrieve products from backend
-  
   const [products, setProduct] = useState([]);
+
+
   useEffect(() => {
     const fetchData = async() => {
       const {data} = await axios.get("/api/products");
@@ -21,7 +22,7 @@ function HomeScreen(props) {
     return <ul className="products">
     {
       products.map(product =>
-      <li key={product.__id}>
+      <li key={product._id}>
       <div className="product">
       <Link to={'/product/' + product._id}>
                   <img
