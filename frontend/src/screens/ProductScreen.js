@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
 
 function ProductScreen(props) {
   const product = data.products.find(x => x._id === props.match.params.id);
-
-  const [orderItems,setOrder] = useState([]);
 
 
   return <div>
@@ -47,7 +45,7 @@ function ProductScreen(props) {
         Status: {product.status}
         </li>
         <li>
-        Quantity: <select>
+        Quantity: <select id="quantity">
           <option>1</option>
           <option>2</option>
           <option>3</option>
@@ -55,7 +53,12 @@ function ProductScreen(props) {
           </select>
         </li>
         <li>
-          <button onClick={setOrder([...orderItems,product]) } >Add to Cart</button>
+          <button onClick={()=>{
+            let input = document.getElementById('quantity');
+            console.log("quantity");
+            console.log(input.value);
+            window.Order.push(product); console.log(window.Order);}
+            } >Add to Cart</button>
         </li>
       </ul> 
     </div>

@@ -33,7 +33,7 @@ function CartScreen(props) {
               Cart is empty
           </div>
             :
-            cartItems.map(item =>
+            window.Order.map(item =>
               <li>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
