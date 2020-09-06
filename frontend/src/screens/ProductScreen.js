@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
 
 function ProductScreen(props) {
   const product = data.products.find(x => x._id === props.match.params.id);
+
+  const [orderItems,setOrder] = useState([]);
+
+
   return <div>
     <div className="back-to-result">
       <Link to="/">Back to Result</Link>
@@ -51,7 +55,7 @@ function ProductScreen(props) {
           </select>
         </li>
         <li>
-          <button>Add to Cart</button>
+          <button onClick={setOrder([...orderItems,product]) } >Add to Cart</button>
         </li>
       </ul> 
     </div>
