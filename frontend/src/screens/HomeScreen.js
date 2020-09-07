@@ -13,6 +13,14 @@ function HomeScreen(props) {
     const fetchData = async () => {
       const { data } = await axios.get("/api/products");
       setProduct(data);
+      
+      // Testing axios get and post
+      const demo1 = await axios.get("/demo1");
+      const demo2 = await axios.post("/demo2");
+      console.log("demo1");
+      console.log(demo1.data);
+      console.log("demo2");
+      console.log(demo2.data);
     }
     fetchData();
     return () => {};

@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-function startApp() {
-    ReactDOM.render(<App />, document.getElementById('root'));
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+/**function startApp() {
+    
 }
 
 startApp();
-export default startApp;
+export default startApp; */
+
 
