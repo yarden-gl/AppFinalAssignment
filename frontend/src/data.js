@@ -7,7 +7,6 @@ export default {
       image: '/images/PupPuffs.jpg',
       price: 60,
       brand: 'Great Choice',
-      type: 'Food',
     },
     {
       _id: '2',
@@ -16,7 +15,6 @@ export default {
       image: '/images/RocabarCollar.jpg',
       price: 50,
       brand: 'Hermes',
-      type: 'Accessories',
     },
     {
       _id: '3',
@@ -25,7 +23,6 @@ export default {
       image: '/images/TastyMinis.jpg',
       price: 70,
       brand: 'Pedigree',
-      type: 'Food',
     }, {
       _id: '4',
       name: 'Leather Collar',
@@ -33,7 +30,6 @@ export default {
       image: '/images/LeatherCollar.jpg',
       price: 70,
       brand: 'Adityna',
-      type: 'Accessories',
     }, {
       _id: '5',
       name: 'Flat Out Leash',
@@ -41,7 +37,6 @@ export default {
       image: '/images/FlatOutLeash.jpg',
       price: 70,
       brand: 'Ruffwear',
-      type: 'Accessories',
     }, {
       _id: '6',
       name: 'Nylon Leash',
@@ -49,7 +44,6 @@ export default {
       image: '/images/NylonLeash.jpg',
       price: 70,
       brand: 'PetSafe',
-      type: 'Accessories',
     }, {
       _id: '7',
       name: 'Spiked Collar',
@@ -57,7 +51,67 @@ export default {
       image: '/images/SpikedCollar.jpg',
       price: 70,
       brand: 'Vova',
-      type: 'Accessories',
+    },
+  ],
+  cart: [
+    {
+      _id: '1',
+      name: 'Pup Puffs',
+      category: 'Treats',
+      image: '/images/PupPuffs.jpg',
+      price: 60,
+      brand: 'Great Choice',
+      quantity: 3,
+    },
+    {
+      _id: '2',
+      name: 'Rocabar',
+      category: 'Collars',
+      image: '/images/RocabarCollar.jpg',
+      price: 50,
+      brand: 'Hermes',
+      quantity: 3,
+    },
+    {
+      _id: '3',
+      name: 'Tasty Minis',
+      category: 'Treats',
+      image: '/images/TastyMinis.jpg',
+      price: 70,
+      brand: 'Pedigree',
+      quantity: 3,
+    }, {
+      _id: '4',
+      name: 'Leather Collar',
+      category: 'Collars',
+      image: '/images/LeatherCollar.jpg',
+      price: 70,
+      brand: 'Adityna',
+      quantity: 3,
+    }, {
+      _id: '5',
+      name: 'Flat Out Leash',
+      category: 'Leashes',
+      image: '/images/FlatOutLeash.jpg',
+      price: 70,
+      brand: 'Ruffwear',
+      quantity: 3,
+    }, {
+      _id: '6',
+      name: 'Nylon Leash',
+      category: 'Leashes',
+      image: '/images/NylonLeash.jpg',
+      price: 70,
+      brand: 'PetSafe',
+      quantity: 3,
+    }, {
+      _id: '7',
+      name: 'Spiked Collar',
+      category: 'Collars',
+      image: '/images/SpikedCollar.jpg',
+      price: 70,
+      brand: 'Vova',
+      quantity: 3,
     },
   ]
 }

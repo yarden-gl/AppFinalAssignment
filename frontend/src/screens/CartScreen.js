@@ -33,26 +33,43 @@ function CartScreen(props) {
               Cart is empty
           </div>
             :
-            window.Order.map(item =>
+            cartItems.map(item => 
               <li>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
                 </div>
                 <div className="cart-name">
                   <div>
-                    <Link to={"/product/" + item.product}>
+                    <Link to={"/product/" + item._id}>
                       {item.name}
                     </Link>
                   </div>
                   <div>
-                    Qty: 0
-                    <button type="button" className="button" onClick >
-                      Delete
+                    Quantity: <select id="quantity" onSelect={
+                    async ()=> {
+                      let input = document.getElementById('quantity');
+                      console.log(input.value);
+                      await axios.post("/currentOrder/" + item._id + "/" + input.value);
+                    }}>
+                      <option>1</option> 
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      </select>
+                    </div>
+                  <div>
+                    <button type="button" className="button" onClick={
+                      async () => {
+                        await axios.post("/currentOrder/" + item._id + "/remove");
+                      }
+                    } >
+                      Remove
                     </button>
                   </div>
                 </div>
                 <div className="cart-price">
-                  ${item.price}
+                ₪{item.price}
                 </div>
               </li>
             )
@@ -62,9 +79,9 @@ function CartScreen(props) {
     </div>
     <div className="cart-action">
       <h3>
-        Subtotal ( {cartItems.reduce((a, c) => a + c.qty, 0)} items)
+        Subtotal ({cartItems.reduce((subTotal, item) => subTotal + item.quantity, 0)} items)
         :
-        ₪ {cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
+        ₪ {cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
       </h3>
       <button className="button primary full-width" disabled={cartItems.length === 0}>
         Proceed to Checkout
@@ -77,3 +94,10 @@ function CartScreen(props) {
 
 export default CartScreen;
 
+/**{()=>{
+          let subTotal = 0;
+            cartItems.forEach((item) => {
+            item.quantity;
+          })
+        }
+        }  */

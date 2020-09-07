@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
+import axios from 'axios';
 
 function ProductScreen(props) {
   const product = data.products.find(x => x._id === props.match.params.id);
@@ -24,10 +25,7 @@ function ProductScreen(props) {
         </li>
         <li>
           {product.brand}
-        </li>
-        <li>
-          {product.type}
-        </li>
+        </li>  
         <li>
           Description:
           <div>
@@ -39,25 +37,10 @@ function ProductScreen(props) {
     <div className="details-action">
       <ul>
         <li>
-        Price: {product.price}
-        </li>
-        <li>
-        Status: {product.status}
-        </li>
-        <li>
-        Quantity: <select id="quantity">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          </select>
-        </li>
-        <li>
-          <button onClick={()=>{
-            let input = document.getElementById('quantity');
-            console.log("quantity");
-            console.log(input.value);
-            window.Order.push(product); console.log(window.Order);}
+          <button onClick={async ()=> {
+            //let input = document.getElementById('quantity');
+            await axios.post("/currentOrder/" + product._id);
+            }
             } >Add to Cart</button>
         </li>
       </ul> 

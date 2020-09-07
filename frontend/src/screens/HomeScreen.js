@@ -4,34 +4,26 @@ import axios from 'axios';
 
 
 function HomeScreen(props) {
+
  
   // Retrieve products from backend
-  
   const [products, setProduct] = useState([]);
-
+  let newProducts = [];
+  // Runs once after rendering component
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/api/products");
       setProduct(data);
-      
-      // Testing axios get and post
-      const demo1 = await axios.get("/demo1");
-      const demo2 = await axios.post("/demo2");
-      console.log("demo1");
-      console.log(demo1.data);
-      console.log("demo2");
-      console.log(demo2.data);
     }
     fetchData();
     return () => {};
-  },[]);
-  
-  
-  
+  },[newProducts]);
+  newProducts = window.arr ? window.arr.data : products;
+
   return <ul className="products">
     {
-      products.map(product =>
-      <li key={product._id}>
+      newProducts.map(product =>
+      <li key={product._id} >
       <div className="product">
       <Link to={'/product/' + product._id}>
                   <img

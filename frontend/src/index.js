@@ -5,12 +5,3 @@ import App from './App';
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-/**function startApp() {
-    
-}
-
-startApp();
-export default startApp; */
-
-

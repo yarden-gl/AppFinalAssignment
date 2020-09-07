@@ -1,42 +1,97 @@
 import express from 'express';
 import data from '../data';
 import redis from 'redis';
+import uuid from 'uuid';
 const app = express();
-//const redis = require("redis");
 const client = redis.createClient();
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
 
-var order = {products: []};
-
-app.get("/api/products", (req,res) => {
-    res.send(data.products);
-});
-
-app.get("/api/cart", (req,res) => {
-    res.send(data.products);
-});
-
-client.hset("yarden-cart", "leash", "1");
-
-app.get("/demo1", (req,res) => {
-    client.hgetall("yarden-cart", (err, reply) => {
-        res.send(reply);
-    });
-});
-
-app.post("/demo2", (req,res) => {
-    client.hgetall("yarden-cart", (err, reply) => {
-        res.send(reply);
-    });
+client.on("error", (error) => {
+    console.log("error")
+    console.error(error);
 });
 
 // Parsing middleware for post requests mainly
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-client.on("error", (error) => {
-    console.log("error")
-    console.error(error);
+//---------------------------- Session Management ----------------------------
+
+/** Taken from calcExpress
+ * 
+let arrSessions = []; // Redis should save the sessions
+  
+app.use(session({
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+}));
+
+//<GET> /start  starts a new session and returns a unique string
+app.get('/start', (req, res, next) => {
+    if(!req.session.uniqustring) {
+        req.session.uniqustring = uuid.v4();
+        let newSession = {
+            uniquString: req.session.uniqustring,
+        };
+        arrSessions.push(newSession);
+    } 
+    res.send(`${req.session.uniqustring}`);
+    console.log(arrSessions);
+});
+ */
+
+//---------------------------- Get Requests ----------------------------
+
+// Returns all products to display in HomeScreen 
+app.get("/api/products", (req,res) => {
+    res.send(data.products);
+});
+
+// Returns products in current order to display in cart
+app.get("/api/cart", (req,res) => {
+    res.send(data.cart);
+});
+
+// Returns products that fit the given search parameter
+app.get("/api/search/", (req,res) => {
+    res.send(data.products);
+});
+
+// Returns products that fit the given search parameter
+app.get("/api/search/:parameter", (req,res) => {
+    let newArr = data.products.filter(function(item) {
+        return item.name.includes(req.params.parameter);
+      });
+    res.send(newArr);
+      console.log(`All products that include '${req.params.parameter}' search filter`);
+      console.log(newArr);
+});
+
+//---------------------------- Post Requests ----------------------------
+
+app.post('/currentOrder/:productId', (req, res, next) => {
+    /** let currentSession = find(req.params.uniqustring);
+ if(currentSession) { // if session with :uniqustring is open
+    currentSession.M += parseInt(req.params.num);
+    res.send(`${currentSession.M}`);   
+} else {
+next();
+} */
+ console.log(`Add product ${req.params.productId} to cart`);
+});
+
+app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
+    console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
+   });   
+
+app.post('/currentOrder/:productId/remove', (req, res, next) => {
+ console.log(`Remove product ${req.params.productId} from cart`);
 });
 
 app.listen(5000, () => {
