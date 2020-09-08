@@ -4,6 +4,9 @@ import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import AboutScreen from './screens/AboutScreen';
+import SigninScreen from './screens/SigninScreen';
+import RegisterScreen from './screens/RegisterScreen';
+//import CheckoutScreen from './screens/CheckoutScreen';
 import axios from 'axios';
 import './App.css';
 
@@ -64,7 +67,8 @@ function App() {
             <Route path="/cart" component={CartScreen}/>
             <Route path="/product/:id" component={ProductScreen}  />
             <Route path="/" exact={true} component={HomeScreen} />
-            
+            <Route path="/signin" component={SigninScreen}  />
+            <Route path="/register" component={RegisterScreen}  />
           </div>  
         </main>
         <footer className="footer">Doggy Delights Inc</footer>
