@@ -55,7 +55,7 @@ app.get("/api/products", (req,res) => {
 
 // Returns products in current order to display in cart
 app.get("/api/cart", (req,res) => {
-    res.send(data.cart);
+    res.send(data.products);
 });
 
 // Returns products that fit the given search parameter
@@ -65,9 +65,14 @@ app.get("/api/search/", (req,res) => {
 
 // Returns products that fit the given search parameter
 app.get("/api/search/:parameter", (req,res) => {
+    let parameter = req.params.parameter;
+        parameter = parameter.toLowerCase();
     let newArr = data.products.filter(function(item) {
-        return item.name.includes(req.params.parameter);
-      });
+        let name = item.name.toLowerCase();
+        let brand = item.brand.toLowerCase();
+        let category = item.category.toLowerCase();
+        return name.includes(parameter) || brand.includes(parameter) || category.includes(parameter) ;
+    });
     res.send(newArr);
       console.log(`All products that include '${req.params.parameter}' search filter`);
       console.log(newArr);
@@ -75,6 +80,7 @@ app.get("/api/search/:parameter", (req,res) => {
 
 //---------------------------- Post Requests ----------------------------
 
+// Add product with :productId to cart and set quantity to 1
 app.post('/currentOrder/:productId', (req, res, next) => {
     /** let currentSession = find(req.params.uniqustring);
  if(currentSession) { // if session with :uniqustring is open
@@ -83,9 +89,11 @@ app.post('/currentOrder/:productId', (req, res, next) => {
 } else {
 next();
 } */
+res.send("Product added to cart");
  console.log(`Add product ${req.params.productId} to cart`);
 });
 
+// Set product's quantity to :quantity in cart
 app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
     console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
    });   

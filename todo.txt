@@ -1,1 +1,5 @@
-data.js -> add more items and add description
+DONE data.js -> add more items and add description
+
+data.js -> remove cart array
+
+Find out how to remove !DOCTYPE html>

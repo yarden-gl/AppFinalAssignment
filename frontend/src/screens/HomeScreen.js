@@ -20,7 +20,7 @@ function HomeScreen(props) {
   },[newProducts]);
   newProducts = window.arr ? window.arr.data : products;
 
-  return <ul className="products">
+  return newProducts.length > 0 ? <ul className="products">
     {
       newProducts.map(product =>
       <li key={product._id} >
@@ -35,14 +35,14 @@ function HomeScreen(props) {
         <div className="product-name">
         <Link to={'/product/' + product._id}></Link>
         </div>
-        
+        <div className="product-name">{product.name}</div>
         <div className="product-brand">{product.brand}</div>
         <div className="product-price">₪{product.price}</div>
         <div className="product-type">{product.type}</div>
       </div>
     </li>)
     }
-  </ul>
+  </ul> : "No results"
 }
 
 export default HomeScreen;

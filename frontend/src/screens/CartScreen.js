@@ -14,7 +14,7 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[]); // Run once when page loads
+  },[cartItems]); // Run once when page loads
 
   return <div className="cart">
     <div className="cart-list"> 
@@ -26,7 +26,7 @@ function CartScreen(props) {
           <div>
             Price
           </div>
-        </li>
+        </li >
         {
           cartItems.length === 0 ?
             <div>
@@ -34,7 +34,7 @@ function CartScreen(props) {
           </div>
             :
             cartItems.map(item => 
-              <li>
+              <li key={item.id}>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
                 </div>
@@ -48,8 +48,9 @@ function CartScreen(props) {
                     Quantity: <select id="quantity" onSelect={
                     async ()=> {
                       let input = document.getElementById('quantity');
-                      console.log(input.value);
-                      await axios.post("/currentOrder/" + item._id + "/" + input.value);
+                      console.log("Selected Amount");
+                      let newCart = await axios.post("/currentOrder/" + item._id + "/" + input.value);
+                      setCart(newCart);
                     }}>
                       <option>1</option> 
                       <option>2</option>
@@ -61,7 +62,9 @@ function CartScreen(props) {
                   <div>
                     <button type="button" className="button" onClick={
                       async () => {
-                        await axios.post("/currentOrder/" + item._id + "/remove");
+                        console.log("Remove");
+                        let newCart = await axios.post("/currentOrder/" + item._id + "/remove");
+                        setCart(newCart);
                       }
                     } >
                       Remove

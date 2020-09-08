@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Link} from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
+import AboutScreen from './screens/AboutScreen';
 import axios from 'axios';
 import './App.css';
 
@@ -35,8 +36,13 @@ function App() {
       <div className="grid-container">
         <header className="header">
           <div className="brand">
-            <Link to="/">Doggy Delights</Link>
-            <input type="text" placeholder="Search.." id="search"></input>
+            <Link to="/" onClick={
+              async () => {
+                await axios.get(`/api/products`);
+                console.log("Get all products");
+              }
+            }>Doggy Delights</Link>
+            <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
             <button type="submit" className="searchButton" onClick = { 
               async () => {
                 let input = document.getElementById('search');
@@ -54,6 +60,7 @@ function App() {
         </header>       
         <main className="main">
           <div className="content">
+            <Route path="/about" component={AboutScreen}/>
             <Route path="/cart" component={CartScreen}/>
             <Route path="/product/:id" component={ProductScreen}  />
             <Route path="/" exact={true} component={HomeScreen} />
@@ -67,3 +74,8 @@ function App() {
 }
 
 export default App;
+
+
+/**
+ * 
+ */

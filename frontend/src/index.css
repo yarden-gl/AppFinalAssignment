@@ -23,12 +23,12 @@ button {
     'main'
     'footer';
   grid-template-columns: 1fr;
-  grid-template-rows: 5rem 1fr 5rem;
+  grid-template-rows: 8rem 1fr 5rem;
   height: 100%;
 }
 .header {
   grid-area: header;
-  background-color: #203040;
+  background-color: #1d5f0d;
   color: #ffffff;
   display: flex;
   justify-content: space-between;
@@ -47,14 +47,14 @@ button {
   padding: 1rem;
 }
 .header-links a:hover {
-  color: #ff8000;
+  color: #27920c;
 }
 .main {
   grid-area: main;
 }
 .footer {
   grid-area: footer;
-  background-color: #203040;
+  background-color: #1d5f0d;
   color: #ffffff;
   display: flex;
   justify-content: center;
@@ -64,7 +64,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #ff8000;
+  color: #27920c;
 }
 /* Home Screen */
 .products {
@@ -432,6 +432,17 @@ tbody > tr:nth-child(odd) {
   display: block;
 }
 
+/* About */
+.about {
+  border: 1px solid gray;
+  padding: 8px;
+  text-align: center;
+  color: #4CAF50;
+  text-indent: 50px;
+  text-align: justify;
+  letter-spacing: 3px;
+}
+
 /* filter */
 
 .filter {
@@ -462,4 +473,9 @@ tbody > tr:nth-child(odd) {
 
 .categories a:hover {
   background-color: #c0c0c0;
+}
+
+.searchBar{
+  padding: 1rem;
+  
 }

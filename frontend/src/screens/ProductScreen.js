@@ -28,9 +28,9 @@ function ProductScreen(props) {
         </li>  
         <li>
           Description:
-          <div>
+        </li>
+        <li>
             {product.description}
-          </div>
         </li>
       </ul>
     </div>
@@ -39,7 +39,8 @@ function ProductScreen(props) {
         <li>
           <button onClick={async ()=> {
             //let input = document.getElementById('quantity');
-            await axios.post("/currentOrder/" + product._id);
+            let response = await axios.post("/currentOrder/" + product._id);
+            alert(JSON.stringify(response.data));
             }
             } >Add to Cart</button>
         </li>
