@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-
+import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 function SigninScreen(props) {
 
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
   
@@ -27,10 +26,8 @@ function SigninScreen(props) {
           <h2>Sign-In</h2>
         </li>
         <li>
-          <label htmlFor="email">
-            Email 
-          </label>
-          <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)}>
+          <label htmlFor="username">Username</label>
+          <input type="text" name="username" id="username" onChange={(e) => setUsername(e.target.value)}>
           </input>
         </li>
         <li>
@@ -39,7 +36,20 @@ function SigninScreen(props) {
           </input>
         </li>
         <li>
-          <button type="submit" className="button primary">Signin</button>
+          <button type="submit" className="button primary" onClick={
+              async () =>{
+                await axios.post('/signin', {
+                    username: username,
+                    password: password
+                  }).then((response) => {
+                    //console.log(response.data);
+                    alert(JSON.stringify(response.data));
+                  }, (error) => {
+                    console.log(error);
+                  });
+                  
+              }
+          }>Signin</button>
         </li>
         <li>
           <Link to="/register" className="button secondary text-center" >SignUp</Link>

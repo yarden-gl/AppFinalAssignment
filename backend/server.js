@@ -120,6 +120,16 @@ app.post('/currentOrder/:productId/remove', (req, res) => {
     console.log(`Remove product ${req.params.productId} from cart`);
 });
 
+app.post('/signin', (req, res) => {
+    console.log(`User with username ${req.body.username} and password ${req.body.password} signed in`);
+    res.send(`Hi ${req.body.username}! You are now signed in`)
+});
+
+app.post('/register', (req, res) => {
+    console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
+    res.send(`Hi ${req.body.username}! You are now registered`)
+});
+
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
 });
