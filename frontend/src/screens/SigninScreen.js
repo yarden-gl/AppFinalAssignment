@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import axios from 'axios';
 
 function SigninScreen(props) {
@@ -42,8 +42,8 @@ function SigninScreen(props) {
                     username: username,
                     password: password
                   }).then((response) => {
-                    //console.log(response.data);
                     alert(JSON.stringify(response.data));
+                    window.location = '/';
                   }, (error) => {
                     console.log(error);
                   });

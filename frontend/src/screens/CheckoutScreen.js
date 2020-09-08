@@ -1,59 +1,76 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
-import CheckoutSteps from '../components/CheckoutSteps';
 import axios from 'axios';
 
 function CheckoutScreen(props) {
 
-  const cart = useSelector(state => state.cart);
-  const orderCreate = useSelector(state => state.orderCreate);
-  const { loading, success, error, order } = orderCreate;
-
-  const { cartItems, shipping, payment } = cart;
-  if (!shipping.address) {
-    props.history.push("/shipping");
-  } else if (!payment.paymentMethod) {
-    props.history.push("/payment");
-  }
-  const itemsPrice = cartItems.reduce((a, c) => a + c.price * c.qty, 0);
-  const shippingPrice = itemsPrice > 100 ? 0 : 10;
-  const taxPrice = 0.15 * itemsPrice;
-  const totalPrice = itemsPrice + shippingPrice + taxPrice;
-
-  const dispatch = useDispatch();
-
-  const placeOrderHandler = () => {
-    // create an order
-    dispatch(createOrder({
-      orderItems: cartItems, shipping, payment, itemsPrice, shippingPrice,
-      taxPrice, totalPrice
-    }));
-  }
+  const [cartItems, setCart] = useState([]);
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState('');
   useEffect(() => {
-    if (success) {
-      props.history.push("/order/" + order._id);
+    const fetchData = async () => {
+      const { data } = await axios.get("/api/cart");
+      setCart(data);
     }
+    fetchData();
+    return () => {};
+  },[cartItems]); // Run once when page loads
 
-  }, [success]);
+
+  const itemsPrice =cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0);
+  const shippingPrice = itemsPrice > 300 ? 0 : 10;
+  const totalPrice = itemsPrice + shippingPrice;
 
   return <div>
-    <CheckoutSteps step1 step2 step3 step4 ></CheckoutSteps>
     <div className="placeorder">
       <div className="placeorder-info">
-        <div>
-          <h3>
-            Shipping
-          </h3>
-          <div>
-            {cart.shipping.address}, {cart.shipping.city},
-          {cart.shipping.postalCode}, {cart.shipping.country},
-          </div>
-        </div>
+      <ul className="form-container">
+          <li>
+            <h3>Shipping</h3>
+          </li>
+          <li>
+            <label htmlFor="address">
+              Address
+          </label>
+            <input type="text" name="address" id="address" onChange={(e) => setAddress(e.target.value)}>
+            </input>
+          </li>
+          <li>
+            <label htmlFor="city">
+              City
+          </label>
+            <input type="text" name="city" id="city" onChange={(e) => setCity(e.target.value)}>
+            </input>
+          </li>
+          <li>
+            <label htmlFor="postalCode">
+              Postal Code
+          </label>
+            <input type="text" name="postalCode" id="postalCode" onChange={(e) => setPostalCode(e.target.value)}>
+            </input>
+          </li>
+          <li>
+            <label htmlFor="country">
+              Country
+          </label>
+            <input type="text" name="country" id="country" onChange={(e) => setCountry(e.target.value)}>
+            </input>
+          </li>
+        </ul>
         <div>
           <h3>Payment</h3>
           <div>
-            Payment Method: {cart.payment.paymentMethod}
+            Payment Method:
           </div>
+          <div>
+            <select id="quantity">
+              <option>Paypal</option> 
+              <option>Credit card</option>
+              <option>Cash</option>
+            </select>
+            </div>
         </div>
         <div>
           <ul className="cart-list-container">
@@ -84,11 +101,11 @@ function CheckoutScreen(props) {
 
                       </div>
                       <div>
-                        Qty: {item.qty}
+                        Quantity: {item.quantity}
                       </div>
                     </div>
                     <div className="cart-price">
-                      ${item.price}
+                    ₪{item.price}
                     </div>
                   </li>
                 )
@@ -101,36 +118,32 @@ function CheckoutScreen(props) {
       <div className="placeorder-action">
         <ul>
           <li>
-            <button className="button primary full-width" onClick={placeOrderHandler} >Place Order</button>
+            <button className="button primary full-width" onClick={
+              async () => {
+                await axios.post("/checkout",{amount: totalPrice});
+                window.location = '/orderComplete';
+              }
+            } >Place Order</button>
           </li>
           <li>
             <h3>Order Summary</h3>
           </li>
           <li>
             <div>Items</div>
-            <div>${itemsPrice}</div>
+            <div>₪{itemsPrice}</div>
           </li>
           <li>
             <div>Shipping</div>
-            <div>${shippingPrice}</div>
-          </li>
-          <li>
-            <div>Tax</div>
-            <div>${taxPrice}</div>
+            <div>₪{shippingPrice}</div>
           </li>
           <li>
             <div>Order Total</div>
-            <div>${totalPrice}</div>
+            <div>₪{totalPrice}</div>
           </li>
         </ul>
-
-
-
       </div>
-
     </div>
   </div>
-
 }
 
 export default CheckoutScreen;

@@ -4,8 +4,6 @@ import axios from 'axios';
 
 function CartScreen(props) {
 
-  // Retrieve cartItems from backend
-
   const [cartItems, setCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -14,7 +12,7 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[cartItems]); // Run once when page loads
+  },[cartItems]);
 
   return <div className="cart">
     <div className="cart-list"> 
@@ -49,8 +47,9 @@ function CartScreen(props) {
                     async ()=> {
                       let input = document.getElementById('quantity');
                       console.log("Selected Amount");
-                      let newCart = await axios.post("/currentOrder/" + item._id + "/" + input.value);
-                      setCart(newCart);
+                      await axios.post("/currentOrder/" + item._id + "/" + input.value).then((data) => {
+                        setCart(data);
+                      });
                     }}>
                       <option>1</option> 
                       <option>2</option>
@@ -63,9 +62,7 @@ function CartScreen(props) {
                     <button type="button" className="button" onClick={
                       async () => {
                         console.log("Remove");
-                        let newCart = await axios.post("/currentOrder/" + item._id + "/remove");
-                        setCart(newCart);
-                      }
+                        await axios.post("/currentOrder/" + item._id + "/remove").then((data) => setCart(data));}
                     } >
                       Remove
                     </button>
@@ -78,7 +75,6 @@ function CartScreen(props) {
             )
         }
       </ul>
-
     </div>
     <div className="cart-action">
       <h3>
@@ -86,7 +82,12 @@ function CartScreen(props) {
         :
         ₪ {cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
       </h3>
-      <button className="button primary full-width" disabled={cartItems.length === 0}>
+      <button className="button primary full-width" disabled={cartItems.length === 0} onClick = {
+        () => {
+          console.log("checkout");
+          window.location = '/checkout';
+        }
+      }>
         Proceed to Checkout
       </button>
 

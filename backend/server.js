@@ -55,7 +55,7 @@ app.get("/api/products", (req, res) => {
 
 // Returns products in current order to display in cart
 app.get("/api/cart", (req, res) => {
-    res.send(data.products);
+    res.send(data.cart);
 });
 
 // Returns products that fit the given search parameter
@@ -129,6 +129,13 @@ app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     res.send(`Hi ${req.body.username}! You are now registered`)
 });
+
+// Need to randomly generate and save orderId
+app.post('/checkout', (req, res) => {
+    console.log(`User made order of ${req.body.amount} nis`);
+    
+});
+
 
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
