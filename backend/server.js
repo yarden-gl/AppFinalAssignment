@@ -49,33 +49,33 @@ app.get('/start', (req, res, next) => {
 //---------------------------- Get Requests ----------------------------
 
 // Returns all products to display in HomeScreen 
-app.get("/api/products", (req,res) => {
+app.get("/api/products", (req, res) => {
     res.send(data.products);
 });
 
 // Returns products in current order to display in cart
-app.get("/api/cart", (req,res) => {
+app.get("/api/cart", (req, res) => {
     res.send(data.products);
 });
 
 // Returns products that fit the given search parameter
-app.get("/api/search/", (req,res) => {
+app.get("/api/search/", (req, res) => {
     res.send(data.products);
 });
 
 // Returns products that fit the given search parameter
-app.get("/api/search/:parameter", (req,res) => {
+app.get("/api/search/:parameter", (req, res) => {
     let parameter = req.params.parameter;
-        parameter = parameter.toLowerCase();
-    let newArr = data.products.filter(function(item) {
+    parameter = parameter.toLowerCase();
+    let newArr = data.products.filter(function (item) {
         let name = item.name.toLowerCase();
         let brand = item.brand.toLowerCase();
         let category = item.category.toLowerCase();
-        return name.includes(parameter) || brand.includes(parameter) || category.includes(parameter) ;
+        return name.includes(parameter) || brand.includes(parameter) || category.includes(parameter);
     });
     res.send(newArr);
-      console.log(`All products that include '${req.params.parameter}' search filter`);
-      console.log(newArr);
+    console.log(`All products that include '${req.params.parameter}' search filter`);
+    console.log(newArr);
 });
 
 //---------------------------- Post Requests ----------------------------
@@ -89,19 +89,37 @@ app.post('/currentOrder/:productId', (req, res, next) => {
 } else {
 next();
 } */
-res.send("Product added to cart");
- console.log(`Add product ${req.params.productId} to cart`);
+    let whichUser = "yarden"
+    client.hincrby(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
+        if (err) { res.send(500) }
+        res.status(200);
+        // here we need redirect or response for react
+    })
+    res.send("Product added to cart");
+    console.log(`Add product ${req.params.productId} to cart`);
 });
 
 // Set product's quantity to :quantity in cart
 app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
     console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
-   });   
+    let whichUser = "yarden"
+    client.hset(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
+        if (err) { res.send(500) }
+        res.status(200);
+        // here we need redirect or response for react
+    })
+});
 
-app.post('/currentOrder/:productId/remove', (req, res, next) => {
- console.log(`Remove product ${req.params.productId} from cart`);
+app.post('/currentOrder/:productId/remove', (req, res) => {
+    let whichUser = "yarden"
+    client.hdel(whichUser + "-cart", req.body.productId,(err, reply) => {
+        if (err){res.send(500)}
+        res.status(200);
+        // here we need response for react
+    })
+    console.log(`Remove product ${req.params.productId} from cart`);
 });
 
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
-  });
+});
