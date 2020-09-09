@@ -55,7 +55,7 @@ function UpdateProductScreen(props) {
             //let input = document.getElementById('quantity');  
             //data.products[index].
             }
-            } >Update</button>
+            }>Update</button>
         </li>
       </ul> 
     </div>

@@ -1,34 +1,23 @@
 import React, { useState, useEffect }  from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import dataP from '../data';
+import all from '../data';
 
 function CartScreen(props) {
-  const allProducts = dataP.products;
+  
+  const allProducts = all.products;
   
   const [cartItems, setCart] = useState([]);
   const [finalCart, setFinalCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data }= dataP.cart;
-      //const { data } = await axios.get("/api/cart");
+      const { data } = await axios.get("/api/cart");
       setCart(data);
-
-      cartItems.forEach((item)=>{
-        let cartProduct = allProducts.find((product)=>{
-          return product._id === item._id;
-        });
-        if(cartProduct) {
-          cartProduct.quantity = item.quantity;
-          setFinalCart([...finalCart,cartProduct])
-        }
-      });
-      
     }
     fetchData();
     return () => {};
-  },[cartItems,allProducts,finalCart]);
-
+  },[cartItems,finalCart]);
+  
   return <div className="cart">
     <div className="cart-list"> 
       <ul className="cart-list-container">

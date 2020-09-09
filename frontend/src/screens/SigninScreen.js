@@ -26,27 +26,32 @@ function SigninScreen(props) {
         </li>
         <li>
           <label htmlFor="username">Username</label>
-          <input type="text" name="username" id="username" onChange={(e) => setUsername(e.target.value)}>
+          <input type="text" name="username" id="username" onChange={(e) => setUsername(e.target.value)} required>
           </input>
         </li>
         <li>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)}>
+          <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} required>
           </input>
         </li>
         <li>
           <button type="submit" className="button primary" onClick={
-              async () =>{
-                await axios.post('/signin', {
+              async () => {
+                if(document.getElementById("username").value && document.getElementById("password").value) {
+                  await axios.post('/signin', {
                     username: username,
-                    password: password
-                  }).then((response) => {
-                    alert(JSON.stringify(response.data));
-                    window.location = '/homescreen';
-                  }, (error) => {
-                    alert("User or password is incorrect, please try again")
-                    console.log(error);
-                  });
+                      password: password
+                    }).then((response) => {
+                      alert(JSON.stringify(response.data));
+                      window.location = '/homescreen';
+                    }, (error) => {
+                      alert("User or password is incorrect, please try again")
+                      console.log(error);
+                    });
+                }
+                else {
+                  alert("Please insert username and password")
+                }   
               }
           }>Signin</button>
         </li>

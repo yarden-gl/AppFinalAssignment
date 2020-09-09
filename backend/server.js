@@ -156,6 +156,7 @@ app.post('/register', (req, res) => {
     })
     redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
+        req.session.username = req.body.username;
         res.status(201).send(`Hi ${req.body.username}! You are now registered`)
     })
 });
