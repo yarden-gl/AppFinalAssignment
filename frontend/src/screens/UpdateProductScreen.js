@@ -19,8 +19,6 @@ function UpdateProductScreen(props) {
   },[updatedProduct]);
   */
 
-
-
   return <div>
     <div className="back-to-result">
       <Link to="/">Back to Result</Link>

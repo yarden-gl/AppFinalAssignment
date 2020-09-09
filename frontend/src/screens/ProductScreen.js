@@ -38,7 +38,7 @@ function ProductScreen(props) {
       <ul>
         <li>
           <button onClick={async ()=> {
-            let response = await axios.post("/currentOrder/" + product._id);
+            let response = await axios.post("/cart/" + product._id);
             alert(JSON.stringify(response.data));
             }
             } >Add to Cart</button>

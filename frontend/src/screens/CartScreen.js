@@ -10,7 +10,8 @@ function CartScreen(props) {
   const [finalCart, setFinalCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get("/api/cart");
+      const data = data.cart;
+      //const { data } = await axios.get("/api/cart");
       setCart(data);
 
       cartItems.forEach((item)=>{
@@ -45,7 +46,7 @@ function CartScreen(props) {
               Cart is empty
           </div>
             :
-            cartItems.map(item => 
+            finalCart.map(item => 
               <li key={item._id}>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
@@ -61,7 +62,7 @@ function CartScreen(props) {
                     async ()=> {
                       console.log("I changed the quantity")
                      /** let input = document.getElementById('quantity');
-                      await axios.post("/currentOrder/" + item._id + "/" + input.value).then((data) => {
+                      await axios.post("/cart/" + item._id + "/" + input.value).then((data) => {
                         setCart(data);
                       });*/ 
                     }}>
@@ -76,7 +77,7 @@ function CartScreen(props) {
                     <button type="button" className="button" onClick={
                       async () => {
                         console.log("Remove");
-                        await axios.post("/currentOrder/" + item._id + "/remove").then((data) => setCart(data));}
+                        await axios.post("/cart/" + item._id + "/remove").then((data) => setCart(data));}
                     } >
                       Remove
                     </button>

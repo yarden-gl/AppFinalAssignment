@@ -79,7 +79,7 @@ app.get("/api/search/:parameter", (req, res) => {
 //---------------------------- Post Requests ----------------------------
 
 // Add product with :productId to cart and set quantity to 1
-app.post('/currentOrder/:productId', (req, res, next) => {
+app.post('/cart/:productId', (req, res, next) => {
     /** let currentSession = find(req.params.uniqustring);
  if(currentSession) { // if session with :uniqustring is open
     currentSession.M += parseInt(req.params.num);
@@ -97,15 +97,13 @@ next();
     console.log(`Add product ${req.params.productId} to cart`);
 });
 
-// Need to randomly generate and save orderId
 app.post('/updateProduct/:productId', (req, res) => {
     console.log(`User made order of ${req.body.amount} nis`);
     res.end();
 });
 
-
 // Set product's quantity to :quantity in cart
-app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
+app.post('/cart/:productId/:quantity', (req, res, next) => {
     console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
     let whichUser = "yarden"
     client.hset(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
@@ -115,7 +113,7 @@ app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
     })
 });
 
-app.post('/currentOrder/:productId/remove', (req, res) => {
+app.post('/cart/:productId/remove', (req, res) => {
     let whichUser = "yarden"
     client.hdel(whichUser + "-cart", req.body.productId,(err, reply) => {
         if (err){res.send(500)}
