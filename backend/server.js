@@ -69,7 +69,7 @@ app.get("/api/cart", (req, res) => {
     redisClient.HGETALL(userName + "-cart", (err, reply) => {
         if (err) { res.status(500).send(serverError); }
         userCart = reply;
-        if (Object.keys(userCart)){
+        if (userCart){
             let addedProductIds = Object.keys(userCart);
             let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
             for (var i in results) {
@@ -78,7 +78,7 @@ app.get("/api/cart", (req, res) => {
             console.log("in api cart");
             res.status(200).send(results);
         } else {
-            res.status(404).send('shopping cart not found, please add items or login');
+            res.status(200).send([]);
         }
     })
 });
@@ -182,6 +182,7 @@ app.post('/register', (req, res) => {
         req.session.username = req.body.username;
         res.status(201).end();
     })
+    console.log(req.body);
 });
 
 // TODO: logic for checking out
@@ -193,6 +194,7 @@ app.post('/checkout', (req, res) => {
 app.delete('/logout', (req, res) => {
     let userName = req.session.username;
     req.session.destroy((err) => {
+        res.clearCookie('connect.sid', { path: '/' });
         console.log(`User ${userName} session killed`);
         res.end();
     })
