@@ -1,10 +1,11 @@
 require('/backend/server.js');
-var expect = require('chai').expect;
-var request = require('request');
+const expect = require('chai').expect;
+const request = require('request');
+const baseRoute = "http://localhost:5000";
 
-describe('Basic GET POST checks', function () {
-  it('should get 404 for not found unique user string', function (done) {
-    request.post('http://localhost:8080/calc/invalid-string/add', function (err, res) {
+describe('User sign up', function () {
+  it('should get 201 for new created user', function (done) {
+    request.post(baseRoute + '/calc/invalid-string/add', function (err, res) {
       expect(res.status).to.equal(404);
     });
     done();

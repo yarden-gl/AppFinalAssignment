@@ -56,13 +56,22 @@ app.get("/api/products", (req, res) => {
 app.get("/api/cart", (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
+    let userCart;
+    let allProducts = data.products
     redisClient.HGETALL(userName + "-cart", (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
-        res.send(reply).end();
+        userCart = reply;
+        if (Object.keys(userCart)){
+            let addedProductIds = Object.keys(userCart);
+            let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
+            for (var i in results) {
+                 results[i].quantity = userCart[results[i]._id];
+            }
+            res.status(200).send(results);
+        } else {
+            res.status(404).send('shopping not found, please add items or login');
+        }
     })
-    console.log(req.session.username);
-    console.log(req.session);
-    console.log(req.session.id);
 });
 
 // Returns products that fit the given search parameter
