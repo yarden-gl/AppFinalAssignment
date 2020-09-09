@@ -89,7 +89,7 @@ function CheckoutScreen(props) {
           </div>
                 :
                 cartItems.map(item =>
-                  <li key={item.id}>
+                  <li key={item._id}>
                     <div className="cart-image">
                       <img src={item.image} alt="product" />
                     </div>

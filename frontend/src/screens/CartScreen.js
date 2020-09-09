@@ -5,10 +5,18 @@ import axios from 'axios';
 function CartScreen(props) {
 
   const [cartItems, setCart] = useState([]);
+  //const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");
       setCart(data);
+/** 
+      cartItems.forEach((item)=>{
+        cartItems.find((product)=>{
+          return product._id === item._id;
+        });
+      });
+      */
     }
     fetchData();
     return () => {};
@@ -32,7 +40,7 @@ function CartScreen(props) {
           </div>
             :
             cartItems.map(item => 
-              <li key={item.id}>
+              <li key={item._id}>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
                 </div>
