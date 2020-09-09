@@ -15,7 +15,7 @@ function HomeScreen(props) {
       const { data } = await axios.get("/api/products");
       setProduct(data);
       //const isAdmin = await axios.get("/isAdmin");
-      const isAdmin = true;
+      const isAdmin = false;
       setAdmin(isAdmin);
       console.log("isAdmin");
     }

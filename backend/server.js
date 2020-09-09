@@ -123,9 +123,15 @@ app.post('/cart/:productId/:quantity', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
+<<<<<<< HEAD
         if (err) { res.status(500).send('Internal server error') }
         res.status(200);
         res.end();
+=======
+        if (err) { res.send(500) }
+        res.status(200).send(`added to ${userName}'s cart
+        product ${req.params.productId} with quantity ${req.params.quantity}`);
+>>>>>>> af33032d87bd12c5b233cd8a784f357dbba17497
     })
 });
 
@@ -136,6 +142,7 @@ app.post('/cart/:productId/remove', (req, res) => {
     let allProducts = data.products;
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
+<<<<<<< HEAD
 
         redisClient.HGETALL(userName + "-cart", (err, reply) => {
             if (err) { res.status(500).send('Internal server error'); }
@@ -148,6 +155,9 @@ app.post('/cart/:productId/remove', (req, res) => {
                 res.status(404).send('shopping cart not found, please add items or login');
             }
         })
+=======
+        res.status(200).send(`removed ${req.params.productId} from ${userName}'s cart`);
+>>>>>>> af33032d87bd12c5b233cd8a784f357dbba17497
     })
 });
 

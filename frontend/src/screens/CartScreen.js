@@ -5,10 +5,7 @@ import all from '../data';
 
 function CartScreen(props) {
   
-  const allProducts = all.products;
-  
   const [cartItems, setCart] = useState([]);
-  const [finalCart, setFinalCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");
@@ -16,8 +13,8 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[cartItems,finalCart]);
-  
+  },[cartItems]);
+
   return <div className="cart">
     <div className="cart-list"> 
       <ul className="cart-list-container">
@@ -30,12 +27,12 @@ function CartScreen(props) {
           </div>
         </li >
         {
-          finalCart.length === 0 ?
+          cartItems.length === 0 ?
             <div>
               Cart is empty
           </div>
             :
-            finalCart.map(item => 
+            cartItems.map(item => 
               <li key={item._id}>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
@@ -66,9 +63,9 @@ function CartScreen(props) {
                     <button type="button" className="button" onClick={
                       async () => {
                         await axios.post("/cart/" + item._id + "/remove").then(
-                          (data) => {
-                            setCart(data);
-                            alert("product removed");
+                          (response) => {
+                            setCart(response.data);
+                            alert("Product removed");
                           }, 
                           (error) => {alert(error);}
                           );}
@@ -86,10 +83,10 @@ function CartScreen(props) {
       </ul>
     </div>
     <div className="cart-action">
-      <h3>
-        Subtotal ({finalCart.reduce((subTotal, item) => subTotal + item.quantity, 0)} items)
+      <h3>   
+        Subtotal ({cartItems.reduce((subTotal,item) => subTotal + item.quantity, 0)} items)
         :
-        ₪ {finalCart.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
+        ₪ {cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
       </h3>
       <button className="button primary full-width" disabled={cartItems.length === 0} onClick = {
         () => {
