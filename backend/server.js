@@ -8,6 +8,7 @@ const session = require('express-session');
 const CryptoJS = require("crypto-js");
 const redisClient = redis.createClient();
 let RedisStore = require('connect-redis')(session)
+const serverError = 'Internal server error';
 
 app.set('trust proxy', 1);
 app.use(session({
@@ -59,7 +60,7 @@ app.get("/api/cart", (req, res) => {
     let userCart;
     let allProducts = data.products
     redisClient.HGETALL(userName + "-cart", (err, reply) => {
-        if (err) { res.status(500).send('Internal server error'); }
+        if (err) { res.status(500).send(serverError); }
         userCart = reply;
         if (Object.keys(userCart)){
             let addedProductIds = Object.keys(userCart);
@@ -67,6 +68,8 @@ app.get("/api/cart", (req, res) => {
             for (var i in results) {
                  results[i].quantity = userCart[results[i]._id];
             }
+            console.log(results);
+            console.log(typeof(results));
             res.status(200).send(results);
         } else {
             res.status(404).send('shopping cart not found, please add items or login');
@@ -102,7 +105,7 @@ app.post('/cart/:productId', (req, res) => {
     let userName = req.session.username;
     let product = req.params.productId;
     redisClient.hincrby(userName + "-cart", product, 1, (err, reply) => {
-        if (err) { res.status(500).send('Internal server error') }
+        if (err) { res.status(500).send(serverError) }
         res.status(200).end();
     })
 });
@@ -110,7 +113,7 @@ app.post('/cart/:productId', (req, res) => {
 // TODO  --> admin updates a product. Need to change data.js file
 app.post('/updateProduct/:productId', (req, res) => {
     redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
-        if (err) { res.status(500).send('Internal server error') }
+        if (err) { res.status(500).send(serverError) }
         res.status(200).end();
         // here we need redirect or response for react
     })
@@ -119,55 +122,50 @@ app.post('/updateProduct/:productId', (req, res) => {
 });
 
 // Set product's quantity to :quantity in cart
-app.post('/cart/:productId/:quantity', (req, res) => {
+app.post('/cart-quantity/:productId/:quantity', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
+    console.log("inside quantity route")
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
-<<<<<<< HEAD
-        if (err) { res.status(500).send('Internal server error') }
+        if (err) { res.status(500).send(serverError) }
         res.status(200);
         res.end();
-=======
-        if (err) { res.send(500) }
-        res.status(200).send(`added to ${userName}'s cart
-        product ${req.params.productId} with quantity ${req.params.quantity}`);
->>>>>>> af33032d87bd12c5b233cd8a784f357dbba17497
     })
 });
 
-app.post('/cart/:productId/remove', (req, res) => {
+app.post('/cart/remove/:productId', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
-    let userName = req.session.username;
+    // let userName = req.session.username;
+    let userName = "test";
     let userCart;
     let allProducts = data.products;
+    console.log(req.params.productId)
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
-        if (err) { res.status(500).send('Internal server error') }
-<<<<<<< HEAD
+        if (err) { res.status(500).send(serverError) }
 
         redisClient.HGETALL(userName + "-cart", (err, reply) => {
-            if (err) { res.status(500).send('Internal server error'); }
+            if (err) { res.status(500).send(serverError); }
             userCart = reply;
             if (Object.keys(userCart)){
                 let addedProductIds = Object.keys(userCart);
                 let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
+                console.log(results);
+                console.log(typeof(results));   
                 res.status(200).send(results);
             } else {
                 res.status(404).send('shopping cart not found, please add items or login');
             }
         })
-=======
-        res.status(200).send(`removed ${req.params.productId} from ${userName}'s cart`);
->>>>>>> af33032d87bd12c5b233cd8a784f357dbba17497
     })
 });
 
 // DONE?
 app.post('/signin', (req, res) => {
     redisClient.hget("users", req.body.username, (err, reply) => {
-        if (err) { res.status(500).send('Internal server error'); }
+        if (err) { res.status(500).send(serverError); }
         if (req.body.password == decrypter(reply)) {
             req.session.username = req.body.username;
-            res.status(200).send(`Hi ${req.body.username}! You are now signed in`);
+            res.status(200);
             res.end();
         } else {
             res.status(404).send('User not found'); 
@@ -180,13 +178,13 @@ app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     // check if username already exists
     redisClient.HEXISTS("users", req.body.username, (err, reply) => {
-        if (err) { res.status(500).send('Internal server error'); }
-        if (reply == 1) { res.status(409).send(`Username ${req.body.username} exists`); }
+        if (err) { res.status(500).send(serverError); }
+        if (reply == 1) { res.status(409).end(); }
     })
     redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
-        if (err) { res.status(500).send('Internal server error'); }
+        if (err) { res.status(500).send(serverError); }
         req.session.username = req.body.username;
-        res.status(201).send(`Hi ${req.body.username}! You are now registered`)
+        res.status(201).end();
     })
 });
 
