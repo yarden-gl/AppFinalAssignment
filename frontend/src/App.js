@@ -17,13 +17,19 @@ function App() {
   const [isAdmin, setAdmin] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-       const isAdmin = await axios.get("/isadmin");
-       //const isAdmin = false;
-       setAdmin(isAdmin);
-       window.isAdmin = isAdmin;
+       await axios.get("/isadmin").then((response)=>{
+        setAdmin(response.data);
+        window.isAdmin = response.data;
+       },(error)=> {
+         alert(error);
+       }
+       );
+       let visible = window.isAdmin ? "" : "none";
+       document.getElementById("logs").style.display = visible;
     }
     fetchData();
-    return () => {};
+    return () => {
+    }
   },[]);
 
   return (
@@ -46,12 +52,14 @@ function App() {
           </div>
           <div>FREE SHIPPING FOR ORDERS OVER ₪300!</div> 
           <div className="header-links">
+          <Link to="/logs" id="logs" >Logs</Link>
             <Link to="/about">About</Link>
             <Link to="/cart">Cart</Link>
             <Link onClick={
               async () => {
                 await axios.delete(`/logout`).then((response)=>console.log(response),
                 (error)=>alert(error));
+                window.location('/');
               }
             }to="/">Log Out</Link>
           </div>
@@ -64,9 +72,10 @@ function App() {
             <Route path="/homescreen"  component={HomeScreen}/>
             <Route path="/" exact={true} component={SigninScreen}/>
             <Route path="/register" component={RegisterScreen}/>
-            <Route path="/checkout" component={CheckoutScreen}  />
-            <Route path="/orderComplete" component={OrderCompleteScreen}  />
-            <Route path="/updateProduct/:id" component={UpdateProductScreen}  />
+            <Route path="/checkout" component={CheckoutScreen}/>
+            <Route path="/orderComplete" component={OrderCompleteScreen}/>
+            <Route path="/updateProduct/:id" component={UpdateProductScreen}/>
+            <Route path="/logs" component={AdminScreen}/>
           </div>  
         </main>
         <footer className="footer">Doggy Delights Inc</footer>

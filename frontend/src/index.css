@@ -489,10 +489,4 @@ tbody > tr:nth-child(odd) {
   text-align: justify;
   letter-spacing: 3px;
 }
-
-.description{
-    height:300px;
-    width:300px;
-    font-size:1em; 
-    text-align: justify;
-}
+  

@@ -29,7 +29,7 @@ function UpdateProductScreen(props) {
     <div className="details-info">
       <ul>
         <li>
-          <h4><input type="text" id="price" value={product.name} required></input></h4>
+          <h4><input type="text" id="name" value={product.name} required></input></h4>
         </li>
         <li>
           Price: <b>₪</b>
@@ -41,8 +41,8 @@ function UpdateProductScreen(props) {
         <li>
           Description:
         </li>
-        <li>
-            <input type="text" className = "description" value= {product.description} id="description" required>
+        <li>{product.description} 
+            <input type="text" className = "description" placeHolder = "Description..." id="description" required>
           </input>
         </li>
       </ul>
