@@ -6,7 +6,7 @@ import axios from 'axios';
 function HomeScreen(props) {
   // Retrieve products from backend
   const [products, setProduct] = useState([]);
-  const [isAdmin, setAdmin] = useState([]);
+  
   var productLink ="/product/";
   let newProducts = [];
   // Runs once after rendering component
@@ -14,14 +14,11 @@ function HomeScreen(props) {
     const fetchData = async () => {
       const { data } = await axios.get("/api/products");
       setProduct(data);
-      //const isAdmin = await axios.get("/isAdmin");
-      const isAdmin = false;
-      setAdmin(isAdmin);
     }
     fetchData();
     return () =>{};
-  },[newProducts,isAdmin]);
-  productLink = isAdmin ? "/updateProduct/" : "/product/";
+  },[newProducts]);
+  productLink = window.isAdmin ? "/updateProduct/" : "/product/";
   newProducts = window.arr ? window.arr.data : products; 
 
   return newProducts.length > 0 ? <ul className="products">

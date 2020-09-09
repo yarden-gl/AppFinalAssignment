@@ -46,13 +46,11 @@ function CartScreen(props) {
                     Quantity: <select id="quantity" value={item.quantity} onChange={
                     async ()=> {
                      let input = document.getElementById('quantity');
-                      await axios.post("/product-quantity/" + item._id + "/" + input.value).then(
+                      await axios.post("/cart-quantity/" + item._id + "/" + input.value).then(
                         (response) => {
-                          console.log(response);
-                          console.log(response.data);
-                          //setCart(response);
+                          setCart(response.data);
                       },(error) => {
-                        console.log(error)
+                        alert(error)
                       });
                     }}>
                       <option>1</option> 
@@ -67,8 +65,6 @@ function CartScreen(props) {
                       async () => {
                         await axios.post("/cart/remove/"+ item._id ).then(
                           (response) => {
-                            console.log(response);
-                          console.log(response.data);
                             setCart(response.data);
                           }, 
                           (error) => {alert(error);}
