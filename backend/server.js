@@ -1,5 +1,5 @@
-import express from 'express';
 import data from '../data';
+import express from 'express';
 import redis from 'redis';
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,6 +7,7 @@ const session = require('express-session');
 const CryptoJS = require("crypto-js");
 const redisClient = redis.createClient();
 let RedisStore = require('connect-redis')(session)
+const async = require('async');
 const serverError = 'Internal server error';
 
 app.set('trust proxy', 1);
@@ -52,6 +53,20 @@ app.get("/isadmin", (req, res) => {
         res.send(true)
     } else { res.send(false)}
 });
+
+app.get("/adminpanel", (req, res)=>{
+    redisClient.scan(0, "match", "*-log", (err, reply)=>{
+        if (err) { res.status(500).send(serverError); }
+        async.map(reply[1], (element)=>{
+            redisClient.HGETALL(element, (err, reply)=>{
+                if (err) { res.status(500).send(serverError); }
+                reply["user"] = element.substring(0, element.length - 4);
+                console.log(JSON.stringify(reply));
+                res.status(200).send(JSON.stringify(reply));
+            })
+        })
+    })
+})
 
 // Done
 // Returns all products to display in HomeScreen 
