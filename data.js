@@ -33,7 +33,7 @@ export default {
       image: '/images/LeatherCollar.jpg',
       price: 70,
       brand: 'Adityna',
-      description: 'none',
+      description: 'TOP-RATED LEATHER DOG COLLAR. Comfortable and featuring secure fastening with double buckle, two D-rings, and high-quality leather, AdiTyna leather collar is a great option for all dogs',
     }, {
       _id: '5',
       name: 'Flat Out Leash',
@@ -130,38 +130,6 @@ export default {
       price: 196,
       brand: 'Pendleton',
       description: 'Quality and craftsmanship from Pendleton®, now providing its tried-and-true merchandise for your beloved pet. This dog coat is in the heather green Yakima design, inspired by vintage camp blankets. It has a quilted interior, soft collar and two velcro straps that close at neck and under the belly. Polyester. Small, 17 to 22-1/2"W x 17"L; Medium, 21 to 29"W x 20"L; Large, 24-1/2 to 33"W x 23"L. Internet Exclusive.'
-    },
-  ],
-  cart: [
-    {
-      _id: '1',
-      name: 'Pup Puffs',
-      category: 'Treats',
-      image: '/images/PupPuffs.jpg',
-      price: 60,
-      brand: 'Great Choice',
-      quantity: 3,
-      description: 'none',
-    },
-    {
-      _id: '2',
-      name: 'Rocabar',
-      category: 'Collars',
-      image: '/images/RocabarCollar.jpg',
-      price: 50,
-      brand: 'Hermes',
-      quantity: 3,
-      description: 'none',
-    },
-    {
-      _id: '3',
-      name: 'Tasty Minis',
-      category: 'Treats',
-      image: '/images/TastyMinis.jpg',
-      price: 70,
-      brand: 'Pedigree',
-      quantity: 3,
-      description: 'none',
     },
   ]
 }

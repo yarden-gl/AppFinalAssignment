@@ -33,7 +33,7 @@ export default {
       image: '/images/LeatherCollar.jpg',
       price: 70,
       brand: 'Adityna',
-      description: 'none',
+      description: 'TOP-RATED LEATHER DOG COLLAR. Comfortable and featuring secure fastening with double buckle, two D-rings, and high-quality leather, AdiTyna leather collar is a great option for all dogs',
     }, {
       _id: '5',
       name: 'Flat Out Leash',

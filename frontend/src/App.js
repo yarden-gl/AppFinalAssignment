@@ -37,7 +37,8 @@ function App() {
           <div className="brand">
             <Link to="/homescreen" onClick={
               async () => {
-                await axios.get(`/api/products`);
+                window.arr=undefined;
+                document.getElementById("search").value="";
               }
             }>Doggy Delights</Link>
             <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
