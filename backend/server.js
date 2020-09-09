@@ -193,7 +193,6 @@ app.post('/checkout', (req, res) => {
 
 app.post('/shippingDetails', (req, res) => {
     let userName = req.session.userame;
-    console.log(req.body);
     redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err)=>{
         if(err) {res.status(500).send(serverError)}
     })
