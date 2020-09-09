@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter, Route, Link} from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
@@ -14,11 +14,9 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-  const [isAdmin, setAdmin] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
        await axios.get("/isadmin").then((response)=>{
-        setAdmin(response.data);
         window.isAdmin = response.data;
        },(error)=> {
          alert(error);

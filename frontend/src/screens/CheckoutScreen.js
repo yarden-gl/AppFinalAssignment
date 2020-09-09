@@ -21,10 +21,7 @@ function CheckoutScreen(props) {
       await axios.post("/shippingDetails",shippingDetails);
     };
   },[]);
-/** function shouldComponentUpdate(){
-    return 
-  }*/
-  
+
   const itemsPrice =cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0);
   const shippingPrice = itemsPrice > 300 ? 0 : 10;
   const totalPrice = itemsPrice + shippingPrice;

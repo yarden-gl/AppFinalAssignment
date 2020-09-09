@@ -31,11 +31,12 @@ function SigninScreen(props) {
         <li>
           <button type="submit" className="button primary" onClick={
               async () => {
+                console.log(document.getElementById("remember"));
                 if(document.getElementById("username").value && document.getElementById("password").value) {
                   await axios.post('/signin', {
                     username: username,
                       password: password,
-                      remember: document.getElementById("remember").value,
+                      remember: document.getElementById("remember").checked,
                     }).then((response) => {
                       alert(`Welcome Back, ${username}! Happy shopping!`);
                       window.location = '/homescreen';
@@ -49,8 +50,8 @@ function SigninScreen(props) {
                 }   
               }
           }>Signin</button>
-          <label for="remember">Remember me</label>
-          <input type="checkbox" id="remember" value="false"></input>
+          <label >Remember me</label>
+          <input type="checkbox" id="remember" value = "false" />
         </li>
         <li>
           <Link to="/register" className="button secondary text-center" >SignUp</Link>
