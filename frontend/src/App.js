@@ -9,6 +9,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import OrderCompleteScreen from './screens/OrderCompleteScreen';
 import UpdateProductScreen from './screens/UpdateProductScreen';
+import AdminScreen from './screens/AdminScreen';
 import axios from 'axios';
 import './App.css';
 

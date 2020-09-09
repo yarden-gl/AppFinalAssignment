@@ -7,7 +7,7 @@ function HomeScreen(props) {
   // Retrieve products from backend
   const [products, setProduct] = useState([]);
   const [isAdmin, setAdmin] = useState([]);
-  
+  var productLink ="/product/";
   let newProducts = [];
   // Runs once after rendering component
   useEffect(() => {
@@ -17,13 +17,12 @@ function HomeScreen(props) {
       //const isAdmin = await axios.get("/isAdmin");
       const isAdmin = false;
       setAdmin(isAdmin);
-      console.log("isAdmin");
+      productLink = isAdmin ? "/updateProduct/" : "/product/";
     }
     fetchData();
     return () =>{};
   },[newProducts,isAdmin]);
-  const productLink = isAdmin ? "/updateProduct/" : "/product/";
-  console.log(productLink);
+  
   newProducts = window.arr ? window.arr.data : products; 
 
   return newProducts.length > 0 ? <ul className="products">

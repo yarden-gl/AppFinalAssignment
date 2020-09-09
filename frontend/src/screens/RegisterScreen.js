@@ -44,7 +44,7 @@ function RegisterScreen(props) {
                     username: username,
                       password: password
                     }).then((response) => {
-                      alert(`Thanks for registering, ${username}! Please sign in:)`);
+                      alert(`Thanks for registering, ${username}! Enjoy Doggy Delights!`);
                       window.location = '/homescreen';
                     }, (error) => {
                       alert(error);
