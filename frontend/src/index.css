@@ -479,3 +479,13 @@ tbody > tr:nth-child(odd) {
   padding: 1rem;
   
 }
+
+.orderComplete {  
+  padding: 150px;
+  padding-left: 300px;
+  text-align: center;
+  color: #4CAF50;
+  text-indent: 50px;
+  text-align: justify;
+  letter-spacing: 3px;
+}

@@ -84,24 +84,12 @@ function CartScreen(props) {
       </h3>
       <button className="button primary full-width" disabled={cartItems.length === 0} onClick = {
         () => {
-          console.log("checkout");
-          window.location = '/checkout';
-        }
-      }>
+        window.location = '/checkout';}
+         }>
         Proceed to Checkout
       </button>
-
     </div>
-
   </div>
 }
 
 export default CartScreen;
-
-/**{()=>{
-          let subTotal = 0;
-            cartItems.forEach((item) => {
-            item.quantity;
-          })
-        }
-        }  */

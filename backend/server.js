@@ -74,8 +74,6 @@ app.get("/api/search/:parameter", (req, res) => {
         return name.includes(parameter) || brand.includes(parameter) || category.includes(parameter);
     });
     res.send(newArr);
-    console.log(`All products that include '${req.params.parameter}' search filter`);
-    console.log(newArr);
 });
 
 //---------------------------- Post Requests ----------------------------
@@ -133,7 +131,7 @@ app.post('/register', (req, res) => {
 // Need to randomly generate and save orderId
 app.post('/checkout', (req, res) => {
     console.log(`User made order of ${req.body.amount} nis`);
-    
+    res.end();
 });
 
 

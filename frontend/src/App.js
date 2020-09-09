@@ -43,7 +43,6 @@ function App() {
             <Link to="/" onClick={
               async () => {
                 await axios.get(`/api/products`);
-                console.log("Get all products");
               }
             }>Doggy Delights</Link>
             <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
