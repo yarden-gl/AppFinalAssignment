@@ -14,11 +14,14 @@ function CheckoutScreen(props) {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");
       setCart(data);
+      const shipping = await axios.get("/getshipping");
+      setAddress(shipping.address);
+      setCity(shipping.city);
+      setPostalCode(shipping.postalCode);
+      setCountry(shipping.country);
     }
     fetchData();
     return async () => {
-      let shippingDetails = {address,city,postalCode,country};
-      await axios.post("/shippingDetails",shippingDetails);
     };
   },[]);
 
@@ -37,29 +40,39 @@ function CheckoutScreen(props) {
             <label htmlFor="address">
               Address
           </label>
-            <input type="text" name="address" id="address" onChange={(e) => setAddress(e.target.value)}>
+            <input type="text" name="address" id="address" value={address ? address : ""} onChange={(e) => setAddress(e.target.value)} required>
             </input>
           </li>
           <li>
             <label htmlFor="city">
               City
           </label>
-            <input type="text" name="city" id="city" onChange={(e) => setCity(e.target.value)}>
+            <input type="text" name="city" id="city" value = {city ? city : ""} onChange={(e) => setCity(e.target.value)} required>
             </input>
           </li>
           <li>
             <label htmlFor="postalCode">
               Postal Code
           </label>
-            <input type="text" name="postalCode" id="postalCode" onChange={(e) => setPostalCode(e.target.value)}>
+            <input type="text" name="postalCode" id="postalCode" value = {postalCode ? postalCode : ""} onChange={(e) => setPostalCode(e.target.value)} required>
             </input>
           </li>
           <li>
             <label htmlFor="country">
               Country
           </label>
-            <input type="text" name="country" id="country" onChange={(e) => setCountry(e.target.value)}>
-            </input>
+            <input type="text" name="country" id="country" value = {country ? country : ""} onChange={(e) => setCountry(e.target.value)} required>
+            </input><br></br>
+            <button className="button primary full-width" onClick={
+              async () => {
+                let shippingDetails = {address,city,postalCode,country};
+                await axios.post("/updateshipping",shippingDetails).then(
+                  (response)=>{
+                    alert("Shipping details set")
+                  },(error)=>{
+                    alert(error);
+              });
+            }}>Set Details</button>
           </li>
         </ul>
         <div>
@@ -115,8 +128,6 @@ function CheckoutScreen(props) {
             }
           </ul>
         </div>
-
-      
       </div>
       <div className="placeorder-action">
         <ul>
@@ -125,7 +136,7 @@ function CheckoutScreen(props) {
               async () => {
                 await axios.post("/checkout",{amount: totalPrice});
                 window.location = '/orderComplete';
-              }
+              } 
             } >Place Order</button>
           </li>
           <li>

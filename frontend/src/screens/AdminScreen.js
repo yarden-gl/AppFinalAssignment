@@ -18,8 +18,8 @@ function AdminScreen(props) {
    <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
             <button type="submit" className="searchButton" onClick = { 
               async () => {
-                let input = document.getElementById('search');
-                window.arr = await axios.get(`/api/search/${input.value}`);
+                let input = document.getElementById('adminfilter');
+                //await axios.get(`/adminfilter`);
               }
             }><span role="img" aria-label="magnifyingglass">🔍</span></button>
   <div className = "table">
