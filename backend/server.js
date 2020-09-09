@@ -190,6 +190,14 @@ app.post('/checkout', (req, res) => {
     res.end();
 });
 
+app.delete('/logout', (req, res) => {
+    let userName = req.session.username;
+    req.session.destroy((err) => {
+        console.log(`User ${userName} session killed`);
+        res.end();
+    })
+});
+
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
 });
