@@ -42,10 +42,10 @@ function SigninScreen(props) {
                     username: username,
                       password: password
                     }).then((response) => {
-                      alert(JSON.stringify(response.data));
+                      alert(`Welcome Back, ${username}! Happy shopping!`);
                       window.location = '/homescreen';
                     }, (error) => {
-                      alert("User or password is incorrect, please try again")
+                      alert("Username or password is incorrect, please try again")
                       console.log(error);
                     });
                 }

@@ -63,9 +63,9 @@ function CartScreen(props) {
                     <button type="button" className="button" onClick={
                       async () => {
                         await axios.post("/cart/" + item._id + "/remove").then(
-                          (data) => {
-                            setCart(data);
-                            alert("product removed");
+                          (response) => {
+                            setCart(response.data);
+                            alert("Product removed");
                           }, 
                           (error) => {alert(error);}
                           );}

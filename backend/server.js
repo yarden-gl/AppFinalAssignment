@@ -124,7 +124,7 @@ app.post('/cart/:productId/:quantity', (req, res) => {
     let userName = req.session.username;
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
         if (err) { res.send(500) }
-        res.status(200).send(`added to ${username}'s cart
+        res.status(200).send(`added to ${userName}'s cart
         product ${req.params.productId} with quantity ${req.params.quantity}`);
     })
 });
@@ -134,7 +134,7 @@ app.post('/cart/:productId/remove', (req, res) => {
     let userName = req.session.username;
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
-        res.status(200).send(`removed ${req.params.productId} from ${username}'s cart`);
+        res.status(200).send(`removed ${req.params.productId} from ${userName}'s cart`);
     })
 });
 
