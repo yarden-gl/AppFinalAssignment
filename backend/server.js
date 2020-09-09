@@ -92,7 +92,7 @@ app.post('/cart/:productId', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
     let product = req.params.productId;
-    client.hincrby(userName + "-cart", product, 1, (err, reply) => {
+    redisClient.hincrby(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
         res.status(200).end();
     })
@@ -100,7 +100,7 @@ app.post('/cart/:productId', (req, res) => {
 
 // TODO  --> admin updates a product. Need to change data.js file
 app.post('/updateProduct/:productId', (req, res) => {
-    client.hset(userName + "-cart", product, 1, (err, reply) => {
+    redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
         res.status(200).end();
         // here we need redirect or response for react
@@ -113,7 +113,7 @@ app.post('/updateProduct/:productId', (req, res) => {
 app.post('/cart/:productId/:quantity', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
-    client.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
+    redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
         if (err) { res.send(500) }
         res.status(200).send(`added to ${username}'s cart
         product ${req.params.productId} with quantity ${req.params.quantity}`);
@@ -123,7 +123,7 @@ app.post('/cart/:productId/:quantity', (req, res) => {
 app.post('/cart/:productId/remove', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
-        client.hdel(userName + "-cart", req.params.productId, (err, reply) => {
+        redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.send(500) }
         res.status(200).send(`removed ${req.params.productId} from ${username}'s cart`);
     })
