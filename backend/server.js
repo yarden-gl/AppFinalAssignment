@@ -68,8 +68,7 @@ app.get("/api/cart", (req, res) => {
             for (var i in results) {
                  results[i].quantity = userCart[results[i]._id];
             }
-            console.log(results);
-            console.log(typeof(results));
+            console.log("in api cart");
             res.status(200).send(results);
         } else {
             res.status(404).send('shopping cart not found, please add items or login');
@@ -134,25 +133,19 @@ app.post('/cart-quantity/:productId/:quantity', (req, res) => {
 
 app.post('/cart/remove/:productId', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
-    // let userName = req.session.username;
-    let userName = "test";
-    let userCart;
+    let userName = req.session.username;
     let allProducts = data.products;
-    console.log(req.params.productId)
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.status(500).send(serverError) }
-
-        redisClient.HGETALL(userName + "-cart", (err, reply) => {
+        redisClient.HGETALL(userName + "-cart", (err, userCart) => {
             if (err) { res.status(500).send(serverError); }
-            userCart = reply;
-            if (Object.keys(userCart)){
+            if (userCart){
                 let addedProductIds = Object.keys(userCart);
                 let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
-                console.log(results);
-                console.log(typeof(results));   
+                console.log("inside remove");
                 res.status(200).send(results);
             } else {
-                res.status(404).send('shopping cart not found, please add items or login');
+                res.status(200).send([]);
             }
         })
     })
