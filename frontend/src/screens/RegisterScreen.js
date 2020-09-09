@@ -44,7 +44,7 @@ function RegisterScreen(props) {
                     password: password
                   }).then((response) => {
                     alert(JSON.stringify(response.data));
-                    window.location = '/';
+                    window.location = '/homescreen';
                   }, (error) => {
                     alert(error);
                     console.log(error);
