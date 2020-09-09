@@ -191,6 +191,14 @@ app.post('/checkout', (req, res) => {
     res.end();
 });
 
+app.post('/shippingDetails', (req, res) => {
+    let userName = req.session.userame;
+    console.log(req.body);
+    redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err)=>{
+        if(err) {res.status(500).send(serverError)}
+    })
+})
+
 app.delete('/logout', (req, res) => {
     let userName = req.session.username;
     req.session.destroy((err) => {
