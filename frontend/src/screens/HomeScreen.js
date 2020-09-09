@@ -17,12 +17,11 @@ function HomeScreen(props) {
       //const isAdmin = await axios.get("/isAdmin");
       const isAdmin = false;
       setAdmin(isAdmin);
-      productLink = isAdmin ? "/updateProduct/" : "/product/";
     }
     fetchData();
     return () =>{};
   },[newProducts,isAdmin]);
-  
+  productLink = isAdmin ? "/updateProduct/" : "/product/";
   newProducts = window.arr ? window.arr.data : products; 
 
   return newProducts.length > 0 ? <ul className="products">

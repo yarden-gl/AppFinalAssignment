@@ -70,8 +70,6 @@ function CartScreen(props) {
                             console.log(response);
                           console.log(response.data);
                             setCart(response.data);
-                            
-                            alert("Product removed");
                           }, 
                           (error) => {alert(error);}
                           );}

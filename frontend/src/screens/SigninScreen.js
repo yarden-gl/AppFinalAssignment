@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link} from 'react-router-dom';
 import axios from 'axios';
 
@@ -7,12 +7,6 @@ function SigninScreen(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  useEffect(() => {
-    return () => {
-      //
-    };
-  }, []);
-
   const submitHandler = (e) => {
     e.preventDefault();
 

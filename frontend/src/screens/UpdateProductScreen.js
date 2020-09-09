@@ -1,7 +1,7 @@
 import React from 'react';//, {useEffect,useState} from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
-//import axios from 'axios';
+import axios from 'axios';
 
 function UpdateProductScreen(props) {
   const product = data.products.find(x => x._id === props.match.params.id);
@@ -52,16 +52,26 @@ function UpdateProductScreen(props) {
         <li>
           <button onClick={async ()=> {
             if(document.getElementById('name').value ||document.getElementById('price').value || document.getElementById('brand').value || document.getElementById('description').value) {
-              document.getElementById('name');  
-            document.getElementById('price');  
-            document.getElementById('brand');  
-            document.getElementById('description'); 
+              let newProduct = {
+                _id : product._id,
+                name : document.getElementById('name').value,
+                category: product.category,
+                image: product.image,
+                price : document.getElementById('price').value,
+                brand : document.getElementById('brand'),
+                description : document.getElementById('description'),
+              }  
+              await axios.post("/updateProduct",newProduct).then(
+                (response) => {
+                  alert("Product updated");
+                }, 
+                (error) => {alert(error);}
+                );
             } else {
               alert("Please fill in all fields");
             }
-             
-            }
-            }>Update</button>
+          }
+          }>Update</button>
         </li>
       </ul> 
     </div>
