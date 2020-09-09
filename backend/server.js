@@ -112,7 +112,6 @@ app.post('/updateProduct/:productId', (req, res) => {
     redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
         res.status(200).end();
-        // here we need redirect or response for react
     })
     console.log(`User made order of ${req.body.amount} nis`);
     res.end();

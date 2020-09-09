@@ -1,7 +1,6 @@
 import React, { useState, useEffect }  from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import all from '../data';
 
 function CartScreen(props) {
   
@@ -13,7 +12,7 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[cartItems]);
+  },[]);
 
   return <div className="cart">
     <div className="cart-list"> 
@@ -46,11 +45,15 @@ function CartScreen(props) {
                   <div>
                     Quantity: <select id="quantity" value={item.quantity} onChange={
                     async ()=> {
-                      console.log("I changed the quantity")
-                     /** let input = document.getElementById('quantity');
-                      await axios.post("/cart/" + item._id + "/" + input.value).then((data) => {
-                        setCart(data);
-                      });*/ 
+                     let input = document.getElementById('quantity');
+                      await axios.post("/product-quantity/" + item._id + "/" + input.value).then(
+                        (response) => {
+                          console.log(response);
+                          console.log(response.data);
+                          //setCart(response);
+                      },(error) => {
+                        console.log(error)
+                      });
                     }}>
                       <option>1</option> 
                       <option>2</option>
@@ -62,9 +65,12 @@ function CartScreen(props) {
                   <div>
                     <button type="button" className="button" onClick={
                       async () => {
-                        await axios.post("/cart/" + item._id + "/remove").then(
+                        await axios.post("/cart/remove/"+ item._id ).then(
                           (response) => {
+                            console.log(response);
+                          console.log(response.data);
                             setCart(response.data);
+                            
                             alert("Product removed");
                           }, 
                           (error) => {alert(error);}
@@ -84,9 +90,9 @@ function CartScreen(props) {
     </div>
     <div className="cart-action">
       <h3>   
-        Subtotal ({cartItems.reduce((subTotal,item) => subTotal + item.quantity, 0)} items)
+        Subtotal ({cartItems.reduce((subTotal,item) => parseInt(subTotal) + parseInt(item.quantity), 0)} items)
         :
-        ₪ {cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
+        ₪ {cartItems.reduce((subTotal, item) => parseInt(subTotal) + parseInt(item.price) * parseInt(item.quantity), 0)}
       </h3>
       <button className="button primary full-width" disabled={cartItems.length === 0} onClick = {
         () => {
