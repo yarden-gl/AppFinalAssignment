@@ -103,15 +103,15 @@ app.post('/cart/:productId', (req, res) => {
     let product = req.params.productId;
     redisClient.hincrby(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
-        res.status(200).send(`Product ${product} added to cart`);
+        res.status(200).end();
     })
 });
 
-// TODO
+// TODO  --> admin updates a product. Need to change data.js file
 app.post('/updateProduct/:productId', (req, res) => {
     redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
-        res.status(200).send(`Product ${product} added to cart`);
+        res.status(200).end();
         // here we need redirect or response for react
     })
     console.log(`User made order of ${req.body.amount} nis`);

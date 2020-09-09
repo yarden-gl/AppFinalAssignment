@@ -16,7 +16,10 @@ function CheckoutScreen(props) {
       setCart(data);
     }
     fetchData();
-    return () => {};
+    return async () => {
+      let shippingDetails = {address,city,postalCode,country};
+      await axios.post("/shippingDetails",shippingDetails);
+    };
   },[cartItems]); // Run once when page loads
 
 

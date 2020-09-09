@@ -8,7 +8,7 @@ function UpdateProductScreen(props) {
   const index = data.products.indexOf(product);
   console.log(index);
   /** 
-   *   const [updatedProduct, setProduct] = useState([]);
+   *   const [updatedProduct, setProduct] = useState(product);
   useEffect(() => {
     const fetchData = async () => {
 
@@ -30,14 +30,14 @@ function UpdateProductScreen(props) {
     <div className="details-info">
       <ul>
         <li>
-          <h4>{product.name}</h4>
+          <h4><input type="text" id="price" name="price" value={product.name}></input></h4>
         </li>
         <li>
-          Price: <b>₪</b><input type="text" id="price" name="price" value={product.price} >
-          </input>
+          Price: <b>₪</b>
+          <input type="text" id="price" name="price" value={product.price}></input>
         </li>
         <li>
-          {product.brand}
+        <input type="text" id="price" name="price" value= {product.brand} ></input>
         </li>  
         <li>
           Description:
@@ -52,10 +52,10 @@ function UpdateProductScreen(props) {
       <ul>
         <li>
           <button onClick={async ()=> {
-            //let input = document.getElementById('quantity');  
+            let input = document.getElementById('quantity');  
             //data.products[index].
             }
-            } >Update</button>
+            }>Update</button>
         </li>
       </ul> 
     </div>
