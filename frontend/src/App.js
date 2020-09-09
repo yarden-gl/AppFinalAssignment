@@ -8,6 +8,7 @@ import SigninScreen from './screens/SigninScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import OrderCompleteScreen from './screens/OrderCompleteScreen';
+import UpdateProductScreen from './screens/UpdateProductScreen';
 import axios from 'axios';
 import './App.css';
 
@@ -72,6 +73,7 @@ function App() {
             <Route path="/register" component={RegisterScreen}/>
             <Route path="/checkout" component={CheckoutScreen}  />
             <Route path="/orderComplete" component={OrderCompleteScreen}  />
+            <Route path="/updateProduct/:id" component={UpdateProductScreen}  />
           </div>  
         </main>
         <footer className="footer">Doggy Delights Inc</footer>

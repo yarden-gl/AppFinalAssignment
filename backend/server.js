@@ -97,6 +97,13 @@ next();
     console.log(`Add product ${req.params.productId} to cart`);
 });
 
+// Need to randomly generate and save orderId
+app.post('/updateProduct/:productId', (req, res) => {
+    console.log(`User made order of ${req.body.amount} nis`);
+    res.end();
+});
+
+
 // Set product's quantity to :quantity in cart
 app.post('/currentOrder/:productId/:quantity', (req, res, next) => {
     console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
