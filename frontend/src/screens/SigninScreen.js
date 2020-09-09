@@ -40,7 +40,8 @@ function SigninScreen(props) {
                 if(document.getElementById("username").value && document.getElementById("password").value) {
                   await axios.post('/signin', {
                     username: username,
-                      password: password
+                      password: password,
+                      remember: document.getElementById("remember").value,
                     }).then((response) => {
                       alert(`Welcome Back, ${username}! Happy shopping!`);
                       window.location = '/homescreen';
@@ -54,6 +55,8 @@ function SigninScreen(props) {
                 }   
               }
           }>Signin</button>
+          <label for="remember">Remember me</label>
+          <input type="checkbox" id="remember" value="false"></input>
         </li>
         <li>
           <Link to="/register" className="button secondary text-center" >SignUp</Link>

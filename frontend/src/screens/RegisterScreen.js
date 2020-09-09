@@ -42,7 +42,8 @@ function RegisterScreen(props) {
                 if(document.getElementById("username").value && document.getElementById("password").value) {
                   await axios.post('/register', {
                     username: username,
-                      password: password
+                      password: password,
+                      remember: document.getElementById("remember").value,
                     }).then((response) => {
                       alert(`Thanks for registering, ${username}! Enjoy Doggy Delights!`);
                       window.location = '/homescreen';
@@ -56,6 +57,8 @@ function RegisterScreen(props) {
                 }   
               }
           }>Register</button>
+           <label for="remember">Remember me</label>
+          <input type="checkbox" id="remember" value="false"></input>
         </li>
 
       </ul>
