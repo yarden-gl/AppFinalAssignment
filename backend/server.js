@@ -6,7 +6,21 @@ const app = express();
 const client = redis.createClient();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const MemoryStore = require('memorystore')(session);
+const CryptoJS = require("crypto-js");
+const redisClient = redis.createClient();
+let RedisStore = require('connect-redis')(session)
+
+app.set('trust proxy', 1);
+app.use(session({
+    store: new RedisStore({ client: redisClient }),
+    secret: 'very secrety string',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        maxAge: 1000 * 30 * 60 // 30 minutes default
+    }
+}))
 
 client.on("error", (error) => {
     console.log("error")
@@ -17,34 +31,18 @@ client.on("error", (error) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// crypto functionaility for password storage
+function encrypter(data) {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), 'very secrety this').toString();
+}
+function decrypter(ciphertext) {
+    let bytes = CryptoJS.AES.decrypt(ciphertext, 'very secrety this');
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+}
+
 //---------------------------- Session Management ----------------------------
 
-/** Taken from calcExpress
- * 
-let arrSessions = []; // Redis should save the sessions
-  
-app.use(session({
-    store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-    }),
-    secret: 'secret-key',
-    resave: false,
-    saveUninitialized: false,
-}));
 
-//<GET> /start  starts a new session and returns a unique string
-app.get('/start', (req, res, next) => {
-    if(!req.session.uniqustring) {
-        req.session.uniqustring = uuid.v4();
-        let newSession = {
-            uniquString: req.session.uniqustring,
-        };
-        arrSessions.push(newSession);
-    } 
-    res.send(`${req.session.uniqustring}`);
-    console.log(arrSessions);
-});
- */
 
 //---------------------------- Get Requests ----------------------------
 
@@ -79,31 +77,28 @@ app.get("/api/search/:parameter", (req, res) => {
 //---------------------------- Post Requests ----------------------------
 
 // Add product with :productId to cart and set quantity to 1
-app.post('/cart/:productId', (req, res, next) => {
-    /** let currentSession = find(req.params.uniqustring);
- if(currentSession) { // if session with :uniqustring is open
-    currentSession.M += parseInt(req.params.num);
-    res.send(`${currentSession.M}`);   
-} else {
-next();
-} */
-    let whichUser = "yarden"
-    client.hincrby(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
-        if (err) { res.send(500) }
-        res.status(200);
+app.post('/cart/:productId', (req, res) => {
+    let userName = req.session.username;
+    let product = req.params.productId;
+    client.hincrby(userName + "-cart", product, 1, (err, reply) => {
+        if (err) { res.status(500).send('Internal server error') }
+        res.status(200).send(`Product ${product} added to cart`);
         // here we need redirect or response for react
     })
-    res.send("Product added to cart");
-    console.log(`Add product ${req.params.productId} to cart`);
 });
 
 app.post('/updateProduct/:productId', (req, res) => {
+    client.hset(userName + "-cart", product, 1, (err, reply) => {
+        if (err) { res.status(500).send('Internal server error') }
+        res.status(200).send(`Product ${product} added to cart`);
+        // here we need redirect or response for react
+    })
     console.log(`User made order of ${req.body.amount} nis`);
     res.end();
 });
 
 // Set product's quantity to :quantity in cart
-app.post('/cart/:productId/:quantity', (req, res, next) => {
+app.post('/cart/:productId/:quantity', (req, res) => {
     console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
     let whichUser = "yarden"
     client.hset(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
@@ -115,8 +110,8 @@ app.post('/cart/:productId/:quantity', (req, res, next) => {
 
 app.post('/cart/:productId/remove', (req, res) => {
     let whichUser = "yarden"
-    client.hdel(whichUser + "-cart", req.body.productId,(err, reply) => {
-        if (err){res.send(500)}
+    client.hdel(whichUser + "-cart", req.body.productId, (err, reply) => {
+        if (err) { res.send(500) }
         res.status(200);
         // here we need response for react
     })
@@ -125,12 +120,29 @@ app.post('/cart/:productId/remove', (req, res) => {
 
 app.post('/signin', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} signed in`);
-    res.send(`Hi ${req.body.username}! You are now signed in`)
+    redisClient.hget("users", req.body.username, (err, reply) => {
+        if (err) { res.status(500).send('Internal server error'); }
+        if (req.body.password == decrypter(reply)) {
+            console.log(reply);
+            req.session.username = req.body.username;
+            res.status(200).send(`Hi ${req.body.username}! You are now signed in`);
+        } else {
+            { res.status(404).send('User not found'); }
+        }
+    })
 });
 
 app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
-    res.send(`Hi ${req.body.username}! You are now registered`)
+    // check if username already exists
+    redisClient.HEXISTS("users", re.body.username, (err, reply) => {
+        if (err) { res.status(500).send('Internal server error'); }
+        if (reply == 1) { res.status(409).send(`Username ${req.body.username} exists`); }
+    })
+    redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
+        if (err) { res.status(500).send('Internal server error'); }
+        res.status(201).send(`Hi ${req.body.username}! You are now registered`)
+    })
 });
 
 // Need to randomly generate and save orderId
