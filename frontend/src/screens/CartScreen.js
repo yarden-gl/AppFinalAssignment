@@ -1,16 +1,16 @@
 import React, { useState, useEffect }  from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import data from '../data';
+import dataP from '../data';
 
 function CartScreen(props) {
-  const allProducts = data.products;
+  const allProducts = dataP.products;
   
   const [cartItems, setCart] = useState([]);
   const [finalCart, setFinalCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const data = data.cart;
+      const { data }= dataP.cart;
       //const { data } = await axios.get("/api/cart");
       setCart(data);
 
@@ -76,8 +76,13 @@ function CartScreen(props) {
                   <div>
                     <button type="button" className="button" onClick={
                       async () => {
-                        console.log("Remove");
-                        await axios.post("/cart/" + item._id + "/remove").then((data) => setCart(data));}
+                        await axios.post("/cart/" + item._id + "/remove").then(
+                          (data) => {
+                            setCart(data);
+                            alert("product removed");
+                          }, 
+                          (error) => {alert(error);}
+                          );}
                     } >
                       Remove
                     </button>
@@ -93,9 +98,9 @@ function CartScreen(props) {
     </div>
     <div className="cart-action">
       <h3>
-        Subtotal ({cartItems.reduce((subTotal, item) => subTotal + item.quantity, 0)} items)
+        Subtotal ({finalCart.reduce((subTotal, item) => subTotal + item.quantity, 0)} items)
         :
-        ₪ {cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
+        ₪ {finalCart.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0)}
       </h3>
       <button className="button primary full-width" disabled={cartItems.length === 0} onClick = {
         () => {

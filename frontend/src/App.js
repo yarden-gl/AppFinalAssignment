@@ -44,7 +44,8 @@ function App() {
             <Link to="/cart">Cart</Link>
             <Link onClick={
               async () => {
-                await axios.delete(`/logout`);
+                await axios.delete(`/logout`).then((response)=>console.log(response),
+                (error)=>alert(error));
               }
             }to="/">Log Out</Link>
           </div>
