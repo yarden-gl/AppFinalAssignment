@@ -183,10 +183,12 @@ app.post('/register', (req, res) => {
     })
 });
 
-// TODO: logic for checking out
-app.post('/checkout', (req, res) => {
-    console.log(`User made order of ${req.body.amount} nis`);
-    res.end();
+app.delete('/logout', (req, res) => {
+    let userName = req.session.username;
+    req.session.destroy((err)=>{
+        console.log(`User  ${userName} session killed`);
+    });
+    res.status(200).end();
 });
 
 app.listen(5000, () => {
