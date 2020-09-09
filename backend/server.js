@@ -133,17 +133,8 @@ app.post('/cart-quantity/:productId/:quantity', (req, res) => {
     let allProducts = data.products;
     console.log("inside quantity route")
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
-        if (err) { res.status(500).send(serverError) }
-        redisClient.HGETALL(userName + "-cart", (err, userCart) => {
-            if (err) { res.status(500).send(serverError); }
-            if (userCart){
-                let addedProductIds = Object.keys(userCart);
-                let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
-                res.status(200).send(results);
-            } else {
-                res.status(200).send([]);
-            }
-        })
+        if (err) { res.status(500).send(serverError); }
+        res.status(200).end();
     })
 });
 
@@ -153,17 +144,17 @@ app.post('/cart/remove/:productId', (req, res) => {
     let allProducts = data.products;
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.status(500).send(serverError) }
-        redisClient.HGETALL(userName + "-cart", (err, userCart) => {
+         redisClient.HGETALL(userName + "-cart", (err, userCart) => {
             if (err) { res.status(500).send(serverError); }
             if (userCart){
                 let addedProductIds = Object.keys(userCart);
                 let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
-                console.log("inside remove");
                 res.status(200).send(results);
             } else {
                 res.status(200).send([]);
             }
         })
+         
     })
 });
 

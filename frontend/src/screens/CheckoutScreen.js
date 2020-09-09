@@ -20,9 +20,11 @@ function CheckoutScreen(props) {
       let shippingDetails = {address,city,postalCode,country};
       await axios.post("/shippingDetails",shippingDetails);
     };
-  },[cartItems]); // Run once when page loads
-
-
+  },[]);
+/** function shouldComponentUpdate(){
+    return 
+  }*/
+  
   const itemsPrice =cartItems.reduce((subTotal, item) => subTotal + item.price * item.quantity, 0);
   const shippingPrice = itemsPrice > 300 ? 0 : 10;
   const totalPrice = itemsPrice + shippingPrice;

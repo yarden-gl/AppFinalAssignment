@@ -12,7 +12,7 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[cartItems]);
+  },[]);
 
   return <div className="cart">
     <div className="cart-list"> 
@@ -48,7 +48,7 @@ function CartScreen(props) {
                      let input = document.getElementById('quantity');
                       await axios.post("/cart-quantity/" + item._id + "/" + input.value).then(
                         (response) => {
-                          setCart(response.data);
+                        window.location = ("/cart");
                       },(error) => {
                         alert(error)
                       });
@@ -65,7 +65,7 @@ function CartScreen(props) {
                       async () => {
                         await axios.post("/cart/remove/"+ item._id ).then(
                           (response) => {
-                            setCart(response.data);
+                           setCart(response.data);
                           }, 
                           (error) => {alert(error);}
                           );}
@@ -83,7 +83,7 @@ function CartScreen(props) {
       </ul>
     </div>
     <div className="cart-action">
-      <h3>   
+    <h3>   
         Subtotal ({cartItems.reduce((subTotal,item) => parseInt(subTotal) + parseInt(item.quantity), 0)} items)
         :
         ₪ {cartItems.reduce((subTotal, item) => parseInt(subTotal) + parseInt(item.price) * parseInt(item.quantity), 0)}
