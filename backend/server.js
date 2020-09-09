@@ -3,7 +3,6 @@ import data from '../data';
 import redis from 'redis';
 import uuid from 'uuid';
 const app = express();
-const client = redis.createClient();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const CryptoJS = require("crypto-js");
@@ -22,7 +21,7 @@ app.use(session({
     }
 }))
 
-client.on("error", (error) => {
+redisClient.on("error", (error) => {
     console.log("error")
     console.error(error);
 });
@@ -40,9 +39,10 @@ function decrypter(ciphertext) {
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }
 
-//---------------------------- Session Management ----------------------------
-
-
+// adding admin user on load
+redisClient.HSET("users", "admin", encrypter("admin"), (err, reply)=>{
+    if(!err) {console.log("added admin user successfully")}
+})
 
 //---------------------------- Get Requests ----------------------------
 
@@ -55,7 +55,14 @@ app.get("/api/products", (req, res) => {
 // Returns products in current order to display in cart
 app.get("/api/cart", (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
-    res.send(data.cart);
+    let userName = req.session.username;
+    redisClient.HGETALL(userName + "-cart", (err, reply) => {
+        if (err) { res.status(500).send('Internal server error'); }
+        res.send(reply).end();
+    })
+    console.log(req.session.username);
+    console.log(req.session);
+    console.log(req.session.id);
 });
 
 // Returns products that fit the given search parameter
@@ -129,7 +136,10 @@ app.post('/signin', (req, res) => {
         if (req.body.password == decrypter(reply)) {
             console.log(reply);
             req.session.username = req.body.username;
+            console.log(req.session)
+            console.log(req.body)
             res.status(200).send(`Hi ${req.body.username}! You are now signed in`);
+            res.end();
         } else {
             res.status(404).send('User not found'); 
         }
@@ -159,3 +169,5 @@ app.post('/checkout', (req, res) => {
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
 });
+
+module.exports = app;
