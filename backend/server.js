@@ -48,21 +48,25 @@ function decrypter(ciphertext) {
 
 // Returns all products to display in HomeScreen 
 app.get("/api/products", (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     res.send(data.products);
 });
 
 // Returns products in current order to display in cart
 app.get("/api/cart", (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     res.send(data.cart);
 });
 
 // Returns products that fit the given search parameter
 app.get("/api/search/", (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     res.send(data.products);
 });
 
 // Returns products that fit the given search parameter
 app.get("/api/search/:parameter", (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let parameter = req.params.parameter;
     parameter = parameter.toLowerCase();
     let newArr = data.products.filter(function (item) {
@@ -78,15 +82,16 @@ app.get("/api/search/:parameter", (req, res) => {
 
 // Add product with :productId to cart and set quantity to 1
 app.post('/cart/:productId', (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
     let product = req.params.productId;
     client.hincrby(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
         res.status(200).send(`Product ${product} added to cart`);
-        // here we need redirect or response for react
     })
 });
 
+// TODO
 app.post('/updateProduct/:productId', (req, res) => {
     client.hset(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send('Internal server error') }
@@ -99,25 +104,25 @@ app.post('/updateProduct/:productId', (req, res) => {
 
 // Set product's quantity to :quantity in cart
 app.post('/cart/:productId/:quantity', (req, res) => {
-    console.log(`Quantity of product ${req.params.productId} in cart is ${req.params.productId}`);
-    let whichUser = "yarden"
-    client.hset(whichUser + "-cart", req.body.productId, 1, (err, reply) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    let userName = req.session.username;
+    client.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
         if (err) { res.send(500) }
-        res.status(200);
-        // here we need redirect or response for react
+        res.status(200).send(`added to ${username}'s cart
+        product ${req.params.productId} with quantity ${req.params.quantity}`);
     })
 });
 
 app.post('/cart/:productId/remove', (req, res) => {
-    let whichUser = "yarden"
-    client.hdel(whichUser + "-cart", req.body.productId, (err, reply) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    let userName = req.session.username;
+        client.hdel(userName + "-cart", req.params.productId, (err, reply) => {
         if (err) { res.send(500) }
-        res.status(200);
-        // here we need response for react
+        res.status(200).send(`removed ${req.params.productId} from ${username}'s cart`);
     })
-    console.log(`Remove product ${req.params.productId} from cart`);
 });
 
+// DONE?
 app.post('/signin', (req, res) => {
     redisClient.hget("users", req.body.username, (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
@@ -126,11 +131,12 @@ app.post('/signin', (req, res) => {
             req.session.username = req.body.username;
             res.status(200).send(`Hi ${req.body.username}! You are now signed in`);
         } else {
-            { res.status(404).send('User not found'); }
+            res.status(404).send('User not found'); 
         }
     })
 });
 
+// DONE?
 app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     // check if username already exists
@@ -149,7 +155,6 @@ app.post('/checkout', (req, res) => {
     console.log(`User made order of ${req.body.amount} nis`);
     res.end();
 });
-
 
 app.listen(5000, () => {
     console.log(`Server started at http://localhost:5000`);
