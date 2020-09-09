@@ -15,22 +15,6 @@ import './App.css';
 function App() {
   useEffect(() => {
     const fetchData = async () => {
-
-      /**
-       * Sessions
-       * 
-      let session;
-      let response = await axios.get('/start');
-      if (response.ok) { // if HTTP-status is 200-299
-          session = await response.text();
-          console.log("HTTP-OK: " + response.status);
-          return session;
-      }
-      console.log("HTTP-Error: " + response.status);
-
-
-      //await axios.get("/start");
-       */
     }
     fetchData();
     return () => {};
@@ -41,7 +25,7 @@ function App() {
       <div className="grid-container">
         <header className="header">
           <div className="brand">
-            <Link to="/" onClick={
+            <Link to="/homescreen" onClick={
               async () => {
                 await axios.get(`/api/products`);
               }
@@ -60,7 +44,7 @@ function App() {
           <div className="header-links">
             <Link to="/about">About</Link>
             <Link to="/cart">Cart</Link>
-            <Link to="/signin">Log Out</Link>
+            <Link to="/logout">Log Out</Link>
           </div>
         </header>       
         <main className="main">
@@ -68,8 +52,8 @@ function App() {
             <Route path="/about" component={AboutScreen}/>
             <Route path="/cart" component={CartScreen}/>
             <Route path="/product/:id" component={ProductScreen}/>
-            <Route path="/" exact={true} component={HomeScreen}/>
-            <Route path="/signin" component={SigninScreen}/>
+            <Route path="/homescreen"  component={HomeScreen}/>
+            <Route path="/" exact={true} component={SigninScreen}/>
             <Route path="/register" component={RegisterScreen}/>
             <Route path="/checkout" component={CheckoutScreen}  />
             <Route path="/orderComplete" component={OrderCompleteScreen}  />

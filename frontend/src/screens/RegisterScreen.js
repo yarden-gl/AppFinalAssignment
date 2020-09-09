@@ -39,13 +39,14 @@ function RegisterScreen(props) {
         <li>
           <button type="submit" className="button primary" onClick={
               async () =>{
-                await axios.post('/signin', {
+                await axios.post('/register', {
                   username: username,
                     password: password
                   }).then((response) => {
                     alert(JSON.stringify(response.data));
                     window.location = '/';
                   }, (error) => {
+                    alert(error);
                     console.log(error);
                   });
                   

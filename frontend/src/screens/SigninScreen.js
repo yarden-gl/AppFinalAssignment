@@ -44,6 +44,7 @@ function SigninScreen(props) {
                     alert(JSON.stringify(response.data));
                     window.location = '/';
                   }, (error) => {
+                    alert("User doesn't exist")
                     console.log(error);
                   });
                   

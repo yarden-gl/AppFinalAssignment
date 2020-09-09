@@ -119,7 +119,6 @@ app.post('/cart/:productId/remove', (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-    console.log(`User with username ${req.body.username} and password ${req.body.password} signed in`);
     redisClient.hget("users", req.body.username, (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
         if (req.body.password == decrypter(reply)) {
@@ -135,7 +134,7 @@ app.post('/signin', (req, res) => {
 app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     // check if username already exists
-    redisClient.HEXISTS("users", re.body.username, (err, reply) => {
+    redisClient.HEXISTS("users", req.body.username, (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
         if (reply == 1) { res.status(409).send(`Username ${req.body.username} exists`); }
     })
