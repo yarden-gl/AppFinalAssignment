@@ -11,10 +11,8 @@
   "dependencies": {
     "axios": "^0.20.0",
     "express": "^4.17.1",
-    "express-session": "^1.17.1",
     "express-sessions": "^1.0.6",
     "memorystore": "^1.6.2",
-    "redis": "^3.0.2",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
@@ -22,6 +20,9 @@
     "@babel/core": "^7.11.6",
     "@babel/node": "^7.10.5",
     "@babel/preset-env": "^7.11.5",
+    "connect-redis": "^5.0.0",
+    "crypto-js": "^4.0.0",
+    "express-session": "^1.17.1",
     "nodemon": "^2.0.4",
     "redis": "^3.0.2"
   }
