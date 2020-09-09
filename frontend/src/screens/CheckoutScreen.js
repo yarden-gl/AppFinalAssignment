@@ -9,6 +9,7 @@ function CheckoutScreen(props) {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
+  
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");

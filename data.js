@@ -162,42 +162,6 @@ export default {
       brand: 'Pedigree',
       quantity: 3,
       description: 'none',
-    }, {
-      _id: '4',
-      name: 'Leather Collar',
-      category: 'Collars',
-      image: '/images/LeatherCollar.jpg',
-      price: 70,
-      brand: 'Adityna',
-      quantity: 3,
-      description: 'none',
-    }, {
-      _id: '5',
-      name: 'Flat Out Leash',
-      category: 'Leashes',
-      image: '/images/FlatOutLeash.jpg',
-      price: 70,
-      brand: 'Ruffwear',
-      quantity: 3,
-      description: 'none',
-    }, {
-      _id: '6',
-      name: 'Nylon Leash',
-      category: 'Leashes',
-      image: '/images/NylonLeash.jpg',
-      price: 70,
-      brand: 'PetSafe',
-      quantity: 3,
-      description: 'none',
-    }, {
-      _id: '7',
-      name: 'Spiked Collar',
-      category: 'Collars',
-      image: '/images/SpikedCollar.jpg',
-      price: 70,
-      brand: 'Vova',
-      quantity: 3,
-      description: 'none'
     },
   ]
 }

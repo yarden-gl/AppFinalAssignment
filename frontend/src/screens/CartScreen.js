@@ -1,26 +1,32 @@
 import React, { useState, useEffect }  from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import data from '../data';
 
 function CartScreen(props) {
-
+  const allProducts = data.products;
+  
   const [cartItems, setCart] = useState([]);
-  //const [products, setProducts] = useState([]);
+  const [finalCart, setFinalCart] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");
       setCart(data);
-/** 
+
       cartItems.forEach((item)=>{
-        cartItems.find((product)=>{
+        let cartProduct = allProducts.find((product)=>{
           return product._id === item._id;
         });
+        if(cartProduct) {
+          cartProduct.quantity = item.quantity;
+          setFinalCart([...finalCart,cartProduct])
+        }
       });
-      */
+      
     }
     fetchData();
     return () => {};
-  },[cartItems]);
+  },[cartItems,allProducts,finalCart]);
 
   return <div className="cart">
     <div className="cart-list"> 
@@ -34,7 +40,7 @@ function CartScreen(props) {
           </div>
         </li >
         {
-          cartItems.length === 0 ?
+          finalCart.length === 0 ?
             <div>
               Cart is empty
           </div>
@@ -51,13 +57,13 @@ function CartScreen(props) {
                     </Link>
                   </div>
                   <div>
-                    Quantity: <select id="quantity" onSelect={
+                    Quantity: <select id="quantity" value={item.quantity} onChange={
                     async ()=> {
-                      let input = document.getElementById('quantity');
-                      console.log("Selected Amount");
+                      console.log("I changed the quantity")
+                     /** let input = document.getElementById('quantity');
                       await axios.post("/currentOrder/" + item._id + "/" + input.value).then((data) => {
                         setCart(data);
-                      });
+                      });*/ 
                     }}>
                       <option>1</option> 
                       <option>2</option>

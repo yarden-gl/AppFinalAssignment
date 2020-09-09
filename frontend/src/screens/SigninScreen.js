@@ -7,7 +7,6 @@ function SigninScreen(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  
   useEffect(() => {
     return () => {
       //

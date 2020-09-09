@@ -4,8 +4,6 @@ import axios from 'axios';
 
 
 function HomeScreen(props) {
-
- 
   // Retrieve products from backend
   const [products, setProduct] = useState([]);
   let newProducts = [];
