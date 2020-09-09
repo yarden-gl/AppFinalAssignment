@@ -1,7 +1,6 @@
 import express from 'express';
 import data from '../data';
 import redis from 'redis';
-import uuid from 'uuid';
 const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -47,6 +46,14 @@ redisClient.HSET("users", "admin", encrypter("admin"), (err, reply)=>{
 
 //---------------------------- Get Requests ----------------------------
 
+app.get("/isadmin", (req, res) => {
+    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (req.session.username == "admin"){
+        res.send(true)
+    } else { res.send(false)}
+});
+
+// Done
 // Returns all products to display in HomeScreen 
 app.get("/api/products", (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
@@ -126,8 +133,7 @@ app.post('/cart-quantity/:productId/:quantity', (req, res) => {
     console.log("inside quantity route")
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
         if (err) { res.status(500).send(serverError) }
-        res.status(200);
-        res.end();
+        res.status(200).end();
     })
 });
 
@@ -151,21 +157,18 @@ app.post('/cart/remove/:productId', (req, res) => {
     })
 });
 
-// DONE?
 app.post('/signin', (req, res) => {
     redisClient.hget("users", req.body.username, (err, reply) => {
         if (err) { res.status(500).send(serverError); }
         if (req.body.password == decrypter(reply)) {
             req.session.username = req.body.username;
-            res.status(200);
-            res.end();
+            res.status(200).end();
         } else {
             res.status(404).send('User not found'); 
         }
     })
 });
 
-// DONE?
 app.post('/register', (req, res) => {
     console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     // check if username already exists
