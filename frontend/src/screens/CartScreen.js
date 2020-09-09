@@ -12,7 +12,7 @@ function CartScreen(props) {
     }
     fetchData();
     return () => {};
-  },[]);
+  },[cartItems]);
 
   return <div className="cart">
     <div className="cart-list"> 

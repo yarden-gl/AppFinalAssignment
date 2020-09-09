@@ -130,10 +130,20 @@ app.post('/updateProduct/:productId', (req, res) => {
 app.post('/cart-quantity/:productId/:quantity', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
+    let allProducts = data.products;
     console.log("inside quantity route")
     redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
         if (err) { res.status(500).send(serverError) }
-        res.status(200).end();
+        redisClient.HGETALL(userName + "-cart", (err, userCart) => {
+            if (err) { res.status(500).send(serverError); }
+            if (userCart){
+                let addedProductIds = Object.keys(userCart);
+                let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
+                res.status(200).send(results);
+            } else {
+                res.status(200).send([]);
+            }
+        })
     })
 });
 
@@ -183,12 +193,10 @@ app.post('/register', (req, res) => {
     })
 });
 
-app.delete('/logout', (req, res) => {
-    let userName = req.session.username;
-    req.session.destroy((err)=>{
-        console.log(`User  ${userName} session killed`);
-    });
-    res.status(200).end();
+// TODO: logic for checking out
+app.post('/checkout', (req, res) => {
+    console.log(`User made order of ${req.body.amount} nis`);
+    res.end();
 });
 
 app.listen(5000, () => {

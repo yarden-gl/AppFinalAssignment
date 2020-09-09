@@ -59,7 +59,6 @@ function App() {
               async () => {
                 await axios.delete(`/logout`).then((response)=>console.log(response),
                 (error)=>alert(error));
-                window.location('/');
               }
             }to="/">Log Out</Link>
           </div>
