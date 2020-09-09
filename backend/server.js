@@ -133,7 +133,7 @@ app.post('/cart/:productId/remove', (req, res) => {
     // if (!req.session.username){ res.status(403).send('forbidden, please login')}
     let userName = req.session.username;
         redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
-        if (err) { res.send(500) }
+        if (err) { res.status(500).send('Internal server error') }
         res.status(200).send(`removed ${req.params.productId} from ${username}'s cart`);
     })
 });
@@ -143,10 +143,7 @@ app.post('/signin', (req, res) => {
     redisClient.hget("users", req.body.username, (err, reply) => {
         if (err) { res.status(500).send('Internal server error'); }
         if (req.body.password == decrypter(reply)) {
-            console.log(reply);
             req.session.username = req.body.username;
-            console.log(req.session)
-            console.log(req.body)
             res.status(200).send(`Hi ${req.body.username}! You are now signed in`);
             res.end();
         } else {
