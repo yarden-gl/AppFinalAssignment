@@ -191,6 +191,21 @@ app.post('/checkout', (req, res) => {
     res.end();
 });
 
+app.post('/updateShipping', (req, res) => {
+    let userName = req.session.userame;
+    redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err)=>{
+        if(err) {res.status(500).send(serverError)}
+    })
+})
+
+app.get('/getShipping', (req, res) => {
+    let userName = req.session.userame;
+    redisClient.HGET(userName, "shipping", (err,reply)=>{
+        if(err) {res.status(500).send(serverError)}
+        res.status(200).send(JSON.parse(reply));
+    })
+})
+
 app.delete('/logout', (req, res) => {
     let userName = req.session.username;
     req.session.destroy((err) => {
