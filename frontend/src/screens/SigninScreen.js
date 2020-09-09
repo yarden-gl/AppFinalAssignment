@@ -42,12 +42,11 @@ function SigninScreen(props) {
                     password: password
                   }).then((response) => {
                     alert(JSON.stringify(response.data));
-                    window.location = '/';
+                    window.location = '/homescreen';
                   }, (error) => {
-                    alert("User doesn't exist")
+                    alert("User or password is incorrect, please try again")
                     console.log(error);
                   });
-                  
               }
           }>Signin</button>
         </li>

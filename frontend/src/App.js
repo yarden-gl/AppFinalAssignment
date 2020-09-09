@@ -35,8 +35,6 @@ function App() {
               async () => {
                 let input = document.getElementById('search');
                 window.arr = await axios.get(`/api/search/${input.value}`);
-                console.log("This is the new array");
-                console.log(window.arr.data);
               }
             }><span role="img" aria-label="magnifyingglass">🔍</span></button>
           </div>
@@ -44,7 +42,11 @@ function App() {
           <div className="header-links">
             <Link to="/about">About</Link>
             <Link to="/cart">Cart</Link>
-            <Link to="/logout">Log Out</Link>
+            <Link onClick={
+              async () => {
+                await axios.delete(`/logout`);
+              }
+            }to="/">Log Out</Link>
           </div>
         </header>       
         <main className="main">
