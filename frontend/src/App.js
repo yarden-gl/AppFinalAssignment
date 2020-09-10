@@ -23,6 +23,7 @@ function App() {
        }
        );
        let visible = window.isAdmin ? "" : "none";
+       if(document.getElementById("logs"))
        document.getElementById("logs").style.display = visible;
     }
     fetchData();

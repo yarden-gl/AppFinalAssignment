@@ -490,3 +490,15 @@ tbody > tr:nth-child(odd) {
   letter-spacing: 3px;
 }
   
+.admin-panel-table {
+  border-collapse: collapse;
+  padding: 15px;
+  text-align: left;
+  border: solid;  
+}
+.admin-panel-table-elements {
+  border-collapse: collapse;
+  padding: 15px;
+  text-align: left;
+  border: inset;
+}
