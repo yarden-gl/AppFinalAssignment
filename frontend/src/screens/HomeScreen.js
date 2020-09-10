@@ -30,7 +30,7 @@ function HomeScreen(props) {
                   <img
                     className="product-image"
                     src={product.image}
-                    alt="product"
+                     alt="product"
                   />
                 </Link>
         <div className="product-name"><Link to={'/product/' + product._id}>{product.name}</Link> </div>

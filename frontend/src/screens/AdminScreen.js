@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 
 
 function AdminScreen(props) {
@@ -7,14 +7,15 @@ function AdminScreen(props) {
   const [logs, setLogs] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get("/logs");
-      setLogs(data);
+     // const { data } = await axios.get("/adminpanel");
+      //setLogs(data);
+      setLogs([{"100":"logged in","200":"check out","user":"dave"},{"100":"logged in","200":"check out","user":"yarden"}]);
     }
     fetchData();
     return () => {};
   },[]);
-
-  return <div className = 'adminScreen'> 
+//let userName = userLog.splice(userLog.length - 1);
+  return logs ? <div className = 'adminScreen'> 
    <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
             <button type="submit" className="searchButton" onClick = { 
               async () => {
@@ -24,12 +25,21 @@ function AdminScreen(props) {
             }><span role="img" aria-label="magnifyingglass">🔍</span></button>
   <div className = "table">
    <table>
-     <tr>
+      { 
+       logs.forEach((userLog) => 
 
-     </tr>
+
+         userLog.map((element) => <tr>
+             <td>userLog</td>
+           </tr>
+         )
+           )
+          }
    </table>
   </div>
 </div>
+
+: "No logs to display"
 }
 
 export default AdminScreen;

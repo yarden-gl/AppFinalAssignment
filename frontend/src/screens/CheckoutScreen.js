@@ -14,7 +14,7 @@ function CheckoutScreen(props) {
     const fetchData = async () => {
       const { data } = await axios.get("/api/cart");
       setCart(data);
-      const shipping = await axios.get("/getShipping");
+      const shipping = await axios.get("/getshipping");
       setAddress(shipping.address);
       setCity(shipping.city);
       setPostalCode(shipping.postalCode);
@@ -66,7 +66,7 @@ function CheckoutScreen(props) {
             <button className="button primary full-width" onClick={
               async () => {
                 let shippingDetails = {address,city,postalCode,country};
-                await axios.post("/updateShipping",shippingDetails).then(
+                await axios.post("/updateshipping",shippingDetails).then(
                   (response)=>{
                     alert("Shipping details set")
                   },(error)=>{
