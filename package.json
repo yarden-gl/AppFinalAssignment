@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch backend --exec babel-node backend/server.js"
+    "start": "nodemon --watch backend --exec babel-node backend/server.js",
+    "test": "mocha backend -r esm --exit"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +26,7 @@
     "chai": "^4.2.0",
     "connect-redis": "^5.0.0",
     "crypto-js": "^4.0.0",
+    "esm": "^3.2.25",
     "express-session": "^1.17.1",
     "mocha": "^8.1.3",
     "moment": "^2.27.0",
