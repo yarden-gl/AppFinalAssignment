@@ -60,28 +60,6 @@ app.get("/isadmin", (req, res) => {
     } else { res.send(false) }
 });
 
-app.get("/adminpanel", (req, res) => {
-    try {
-        if (!req.session.username) { res.status(403).send('forbidden, please login') }
-        else {
-            let result = {};
-            redisClient.scan(0, "match", '*-log', function (err, userNames) {
-                async.each(userNames[1], function (user, callback) {
-                    redisClient.HGETALL(user, function (err, value) {
-                        user = user.substring(0, user.length - 4);
-                        result[user] = value;
-                        callback(err);
-                    });
-                }, function () {
-                    res.send(JSON.stringify(result));
-                });
-            });
-        }
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-
 // returns array of all user names
 app.get("/allusers", (req, res) => {
     if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
