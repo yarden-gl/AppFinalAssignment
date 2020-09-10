@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function AdminScreen(props) {
   
-  const [time,setTime] = useState([]);
+  
   const [actions,setActions] = useState([]);
   const [users, setUsers] = useState([]);
   const[user,setUser] = useState([]);
@@ -16,7 +16,6 @@ function AdminScreen(props) {
         console.log(error);
       });
     } 
-
     fetchData();
     return () => {};
   },[user]);
@@ -34,7 +33,6 @@ function AdminScreen(props) {
             <button type="submit" className="searchButton" onClick = { 
               async () => {
                   await axios.get(`/userlog/${user}`).then((response)=>{
-                  setTime(Object.keys(response.data));
                   setActions(Object.values(response.data));
                 },
                   (error)=>

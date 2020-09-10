@@ -17,7 +17,8 @@ import './App.css';
 function App() {
   useEffect(() => {
     const fetchData = async () => {
-       await axios.get("/isadmin").then((response)=>{
+      /**
+       * await axios.get("/isadmin").then((response)=>{
         window.isAdmin = response.data;
        },(error)=> {
          alert(error);
@@ -27,6 +28,8 @@ function App() {
        if(document.getElementById("logs"))
        document.getElementById("logs").style.display = visible;
     }
+       */
+  }
     fetchData();
     return () => {
     }
