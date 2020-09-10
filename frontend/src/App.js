@@ -62,7 +62,16 @@ function App() {
           </div>
           <div>FREE SHIPPING FOR ORDERS OVER ₪300!</div> 
           <div className="header-links">
-          <Link to="/logs" id="logs" >Logs</Link>
+          <Link onClick = { async () => {
+            await axios.get("/isadmin").then((response)=>{
+              window.isAdmin = response.data;
+              window.location = '/logs';
+             },(error)=> {
+               alert(error);
+             }
+             );
+            }
+          } id="logs" >Logs</Link>
             <Link to="/about">About</Link>
             <Link  onClick= {
               async ()=> {
