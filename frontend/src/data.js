@@ -1,5 +1,5 @@
-export default {
-  products: [
+ export default {
+ products: [
     {
       _id: '1',
       name: 'Pup Puffs',

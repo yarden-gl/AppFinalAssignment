@@ -1,4 +1,4 @@
-import ('../server.js');
+require ('../server.js');
 // import expect from 'chai';
 const expect = require('chai').expect;
 const request = require('request');
