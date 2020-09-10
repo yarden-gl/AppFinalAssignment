@@ -10,6 +10,7 @@ import CheckoutScreen from './screens/CheckoutScreen';
 import OrderCompleteScreen from './screens/OrderCompleteScreen';
 import UpdateProductScreen from './screens/UpdateProductScreen';
 import AdminScreen from './screens/AdminScreen';
+import ReadMe from './screens/ReadMe';
 import axios from 'axios';
 import './App.css';
 
@@ -72,13 +73,7 @@ function App() {
              );
             }
           } id="logs" >Logs</Link>
-          <button onClick={
-            async ()=> {
-              await axios.get(`/readme`).then((response)=>
-              console.log(response),
-              (error)=>alert(error));
-            }
-          }>Read Me</button>
+          <Link to="/readme">ReadMe</Link>
             <Link to="/about">About</Link>
             <Link  onClick= {
               async ()=> {
@@ -108,6 +103,7 @@ function App() {
             <Route path="/orderComplete" component={OrderCompleteScreen}/>
             <Route path="/updateProduct/:id" component={UpdateProductScreen}/>
             <Route path="/logs" component={AdminScreen}/>
+            <Route path="/readme" component={ReadMe}/>
           </div>  
         </main>
         <footer className="footer">Doggy Delights Inc</footer>
