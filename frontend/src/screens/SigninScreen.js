@@ -38,7 +38,7 @@ function SigninScreen(props) {
                       password: password,
                       remember: document.getElementById("remember").checked,
                     }).then((response) => {
-                      alert(`Welcome Back, ${username}!`);
+                      alert(`Welcome back, ${username}!`);
                       window.location = '/homescreen';
                     }, (error) => {
                       alert("Username or password is incorrect, please try again")
