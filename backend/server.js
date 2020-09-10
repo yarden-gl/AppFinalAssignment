@@ -9,6 +9,7 @@ const redisClient = redis.createClient();
 const moment = require('moment');
 let RedisStore = require('connect-redis')(session)
 const serverError = 'Internal server error';
+const forbiddenError = 'forbidden, please login';
 const CryptoSalt = 'very secret stuff';
 
 app.use(session({
@@ -53,11 +54,6 @@ redisClient.HSET("users", "admin", encrypter("admin"), (err, reply) => {
 
 //---------------------------- Get Requests ----------------------------
 
-app.get('/readme', (req, res) => {
-    console.log("in readme");
-    res.sendFile('../../readme.html', { root : __dirname});
-});
-
 app.get("/isadmin", (req, res) => {
     try {
         if (req.session.username == "admin") {
@@ -68,7 +64,7 @@ app.get("/isadmin", (req, res) => {
 
 // returns array of all user names
 app.get("/allusers", (req, res) => {
-    if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
+    if (req.session.username != 'admin') { res.status(403).send(forbiddenError) }
     else {
         redisClient.HKEYS("users", (err, reply) => {
             if (err) { res.status(500).send(serverError); }
@@ -79,12 +75,10 @@ app.get("/allusers", (req, res) => {
 
 // returns an object with the user logs in time:action format
 app.get("/userlog/:username", (req, res) => {
-    console.log(req.params.username)
-    if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
+    if (req.session.username != 'admin') { res.status(403).send(forbiddenError) }
     else {
         redisClient.HGETALL(req.params.username + "-log", (err, reply) => {
             if (err) { res.status(500).send(serverError); }
-            console.log(reply)
             res.status(200).send(reply);
         })
     }
@@ -92,7 +86,7 @@ app.get("/userlog/:username", (req, res) => {
 
 // Returns all products to display in HomeScreen 
 app.get("/api/products", (req, res) => {
-    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    if (!req.session.username) { res.status(403).send(forbiddenError) }
     else {
         res.send(data.products);
     }
@@ -100,7 +94,7 @@ app.get("/api/products", (req, res) => {
 
 // Returns products in current order to display in cart
 app.get("/api/cart", (req, res) => {
-    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    if (!req.session.username) { res.status(403).send(forbiddenError) }
     else {
         let userName = req.session.username;
         let userCart;
@@ -124,7 +118,7 @@ app.get("/api/cart", (req, res) => {
 
 // Returns products that fit search parameter
 app.get("/api/search/", (req, res) => {
-    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    if (!req.session.username) { res.status(403).send(forbiddenError) }
     else {
         res.send(data.products);
     }
@@ -132,7 +126,7 @@ app.get("/api/search/", (req, res) => {
 
 // Returns products that fit the given search parameter
 app.get("/api/search/:parameter", (req, res) => {
-    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    if (!req.session.username) { res.status(403).send(forbiddenError) }
     else {
         let parameter = req.params.parameter;
         parameter = parameter.toLowerCase();
@@ -150,7 +144,7 @@ app.get("/api/search/:parameter", (req, res) => {
 
 // Add product with :productId to user cart and set quantity to 1
 app.post('/cart/:productid', (req, res) => {
-    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    if (!req.session.username) { res.status(403).send(forbiddenError) }
     else {
         let userName = req.session.username;
         let product = req.params.productid;
@@ -165,26 +159,25 @@ app.post('/cart/:productid', (req, res) => {
     }
 });
 
-// TODO  --> admin updates a product. Need to change data.js file
+// admin updates a product. Changes to apply saved in redis
 app.post('/updateproduct/:productid', (req, res) => {
+    console.log(req.body)
     try {
-        redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
+        redisClient.hset("update products", req.params.productid, JSON.stringify(req.body), (err, reply) => {
             if (err) { res.status(500).send(serverError) }
             res.status(200).end();
         })
-        console.log(`User made order of ${req.body.amount} nis`);
-        res.end();
     } catch (error) {
+        res.status(500).send(error)
     }
 });
 
 // Set product's quantity to :quantity in user cart
 app.post('/cart-quantity/:productid/:quantity', (req, res) => {
     try {
-        if (!req.session.username) { res.status(403).send('forbidden, please login') }
+        if (!req.session.username) { res.status(403).send(forbiddenError) }
         else {
             let userName = req.session.username;
-            console.log("inside quantity route")
             redisClient.hset(userName + "-cart", req.params.productid, req.params.quantity, (err, reply) => {
                 if (err) { throw err }
                 res.status(200).end();
@@ -198,7 +191,7 @@ app.post('/cart-quantity/:productid/:quantity', (req, res) => {
 // remove cart from redis db according to product id
 app.post('/cart/remove/:productid', (req, res) => {
     try {
-        if (!req.session.username) { res.status(403).send('forbidden, please login') }
+        if (!req.session.username) { res.status(403).send(forbiddenError) }
         else {
             let userName = req.session.username;
             let allProducts = data.products;
@@ -272,7 +265,6 @@ app.post('/register', (req, res) => {
 
 // checkout + log the action + delete the user cart.
 app.post('/checkout', (req, res) => {
-    console.log("inside checkout")
     let userName = req.session.username;
     try {
         redisClient.HSET(userName + "-log", moment().format(),
@@ -292,7 +284,7 @@ app.post('/checkout', (req, res) => {
 app.post('/updateshipping', (req, res) => {
     let userName = req.session.username;
     try {
-        if (!userName) { res.status(403).send('forbidden, please login') }
+        if (!userName) { res.status(403).send(forbiddenError) }
         else {
             redisClient.HSET("shipping-details", userName, JSON.stringify(req.body), (err) => {
                 if (err) { throw err }
@@ -308,11 +300,10 @@ app.post('/updateshipping', (req, res) => {
 app.get('/getshipping', (req, res) => {
     let userName = req.session.username;
     try {
-        if (!userName) { res.status(403).send('forbidden, please login') }
+        if (!userName) { res.status(403).send(forbiddenError) }
         else {
             redisClient.HGET("shipping-details", userName, (err, reply) => {
                 if (err) { throw err }
-                console.log(JSON.parse(reply))
                 res.status(200).send(JSON.parse(reply));
             })
         }
