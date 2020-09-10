@@ -31,7 +31,6 @@ function SigninScreen(props) {
         <li>
           <button type="submit" className="button primary" onClick={
               async () => {
-                console.log(document.getElementById("remember"));
                 if(document.getElementById("username").value && document.getElementById("password").value) {
                   await axios.post('/signin', {
                     username: username,

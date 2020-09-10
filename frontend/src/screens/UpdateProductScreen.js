@@ -1,22 +1,11 @@
-import React from 'react';//, {useEffect,useState} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
 import axios from 'axios';
 
 function UpdateProductScreen(props) {
   const product = data.products.find(x => x._id === props.match.params.id);
-  const index = data.products.indexOf(product);
-  console.log(index);
-
-  /** 
-   * const [updatedProduct, setProduct] = useState(product);
-  useEffect(() => {
-    const fetchData = async () => {
-    }
-    fetchData();
-    return () => {};
-  },[updatedProduct]);
-  */
+  
 
   return <div>
     <div className="back-to-result">

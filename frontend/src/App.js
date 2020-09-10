@@ -72,6 +72,13 @@ function App() {
              );
             }
           } id="logs" >Logs</Link>
+          <button onClick={
+            async ()=> {
+              await axios.get(`/readme`).then((response)=>
+              console.log(response),
+              (error)=>alert(error));
+            }
+          }>Read Me</button>
             <Link to="/about">About</Link>
             <Link  onClick= {
               async ()=> {

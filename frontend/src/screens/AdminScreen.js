@@ -20,15 +20,6 @@ function AdminScreen(props) {
     fetchData();
     return () => {};
   },[user]);
-  /**
-   * adminLogs.forEach((userLog) => {
-    //console.log(userLog);
-    keys = Object.keys(userLog);
-    values = [Object.values(userLog)];  
-   // console.log(keys);
-    //console.log(values);
-    }); 
-   */
 
   return <div>
     <label>Users:</label>
@@ -43,8 +34,6 @@ function AdminScreen(props) {
             <button type="submit" className="searchButton" onClick = { 
               async () => {
                   await axios.get(`/userlog/${user}`).then((response)=>{
-                  console.log(`Give me logs for ${user}`);
-                  console.log(Object.values(response.data));
                   setTime(Object.keys(response.data));
                   setActions(Object.values(response.data));
                 },
