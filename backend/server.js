@@ -11,7 +11,6 @@ let RedisStore = require('connect-redis')(session)
 const serverError = 'Internal server error';
 const CryptoSalt = 'very secret stuff';
 
-// app.use('../../static', express.static(path.join(__dirname, 'public')))
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'very secrety string',
@@ -53,6 +52,11 @@ redisClient.HSET("users", "admin", encrypter("admin"), (err, reply) => {
 })
 
 //---------------------------- Get Requests ----------------------------
+
+app.get('/readme', (req, res) => {
+    console.log("in readme");
+    res.sendFile('../../readme.html', { root : __dirname});
+});
 
 app.get("/isadmin", (req, res) => {
     if (req.session.username == "admin") {
@@ -260,10 +264,16 @@ app.post('/register', (req, res) => {
     }
 });
 
-// TODO: logic for checking out
 app.post('/checkout', (req, res) => {
-    console.log(`User made order of ${req.body.amount} nis`);
-    res.end();
+    try {
+        redisClient.HSET(req.session.username + "-log", moment().format(),
+        `place order for ${req.body.amount} nis`, (err) => {
+            if (err) { throw err };
+        });
+        res.end();
+    } catch (error) {
+        res.status(500).send(error);
+    }
 });
 
 // creates shipping value under user name table
