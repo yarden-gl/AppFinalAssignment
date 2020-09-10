@@ -54,12 +54,6 @@ redisClient.HSET("users", "admin", encrypter("admin"), (err, reply) => {
 
 //---------------------------- Get Requests ----------------------------
 
-// app.get('/readme', (req, res) => {
-//     // res.sendFile(__dirname + '/readme.html');
-
-//     res.redirect('./readme.html')
-// });
-
 app.get("/isadmin", (req, res) => {
     try {
         if (req.session.username == "admin") {
