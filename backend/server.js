@@ -72,10 +72,12 @@ app.get("/allusers", (req, res) => {
 });
 // returns an object with time:action 
 app.get("/userlog/:username", (req, res) => {
+    console.log(req.username.params)
     if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
     else {
         redisClient.HGETALL(req.params.username + "-log", (err, reply) => {
             if (err) { res.status(500).send(serverError); }
+            console.log(reply)
             res.status(200).send(reply);
         })
     }
@@ -141,6 +143,7 @@ app.get("/api/search/:parameter", (req, res) => {
 
 // Add product with :productId to cart and set quantity to 1
 app.post('/cart/:productid', (req, res) => {
+    console.log(req)
     if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let userName = req.session.username;
@@ -218,11 +221,10 @@ app.post('/cart/remove/:productid', (req, res) => {
 app.post('/signin', (req, res) => {
     try {
         redisClient.hget("users", req.body.username, (err, reply) => {
-            console.log(req.body)
             if (req.body.password == decrypter(reply)) {
                 req.session.username = req.body.username;
                 redisClient.HSET(req.session.username + "-log", moment().format(), "logged in", (err, reply) => {
-                    if (err) { res.status(500).send(serverError); }
+                    if (err) { throw err }
                 });
                 if (req.body.remember) {
                     req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
@@ -239,10 +241,8 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     try {
-        console.log(req.body.username)
         // check if username already exists
         redisClient.HEXISTS("users", req.body.username, (err, reply) => {
-            console.log(reply)
             if (reply == 1) { res.status(409).end(); }
             else {
                 redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
@@ -306,8 +306,27 @@ app.delete('/logout', (req, res) => {
                 `logged out`, (err, reply) => {
                     if (err) { throw err }
                 });
-            res.end();
+            res.status(200).end();
         })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// for test purposes, deleting users
+app.delete('/deleteuser/:username', (req, res) => {
+    try {
+        if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
+        else {
+            let userName = req.params.username;
+            redisClient.HDEL("users", userName, (err, reply) =>{
+                if (err) { throw err }
+                if (reply == 1) res.status(200).end()
+                else {
+                    res.status(404).send('user not found')
+                }
+            })
+        }
     } catch (error) {
         res.status(500).send(error);
     }
