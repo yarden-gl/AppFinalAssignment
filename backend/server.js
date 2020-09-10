@@ -239,17 +239,21 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     try {
+        console.log(req.body.username)
         // check if username already exists
         redisClient.HEXISTS("users", req.body.username, (err, reply) => {
+            console.log(reply)
             if (reply == 1) { res.status(409).end(); }
-        })
-        redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
-            if (err) { throw err }
-            req.session.username = req.body.username;
-            if (req.body.remember) {
-                req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
+            else {
+                redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
+                    if (err) { throw err }
+                    req.session.username = req.body.username;
+                    if (req.body.remember) {
+                        req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
+                    }
+                    res.status(201).end();
+                })
             }
-            res.status(201).end();
         })
     } catch (error) {
         res.status(500).send(error);
