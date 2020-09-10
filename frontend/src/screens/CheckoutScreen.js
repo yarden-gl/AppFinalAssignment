@@ -69,13 +69,18 @@ function CheckoutScreen(props) {
             </input><br></br>
             <button className="button primary full-width" onClick={
               async () => {
-                let shippingDetails = {address,city,postalCode,country};
-                await axios.post("/updateshipping",shippingDetails).then(
-                  (response)=>{
-                    alert("Shipping details set")
-                  },(error)=>{
-                    alert(error);
-              });
+                
+                if(address&&city&&postalCode&&country){
+                  let shippingDetails = {address,city,postalCode,country};
+                  await axios.post("/updateshipping",shippingDetails).then(
+                    (response)=>{
+                      alert("Shipping details set")
+                    },(error)=>{
+                      alert(error);
+                });
+                }else {
+                  alert("Please insert all shipping details")
+                }
             }}>Set Details</button>
           </li>
         </ul>
@@ -138,13 +143,12 @@ function CheckoutScreen(props) {
           <li>
             <button className="button primary full-width" onClick={
               async () => {
-                if(shippingDetails){
+                if(address&&city&&country&&postalCode){
                   await axios.post("/checkout",{amount: totalPrice});
                   window.location = '/orderComplete';
                 } else {
                   alert("Please insert shipping details");
                 }
-             
               } 
             } >Place Order</button>
           </li>
