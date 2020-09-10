@@ -36,7 +36,7 @@ function App() {
       <div className="grid-container">
         <header className="header">
           <div className="brand">
-            <Link onClick={
+            <button onClick={
               async () => {
                 window.arr=undefined;
                 document.getElementById("search").value="";
@@ -47,7 +47,7 @@ function App() {
                 );
                 
               }
-            }>Doggy Delights</Link>
+            }>Doggy Delights</button>
             <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
             <button type="submit" className="searchButton" onClick = { 
               async () => {

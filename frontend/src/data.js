@@ -1,6 +1,5 @@
-// module.exports = {
 export default {
- products: [
+  products: [
     {
       _id: '1',
       name: 'Pup Puffs',
@@ -77,14 +76,6 @@ export default {
       description: 'USA chicken and duck are the first ingredients. All natural ingredients. No artificial flavors. No artificial preservatives. No animal by-products. Easy to tear into bite-sized pieces'
     }, {
       _id: '10',
-      name: 'Jerky Cuts',
-      category: 'Treats',
-      image: '/images/JerkyCuts.jpg',
-      price: 33,
-      brand: 'Blue Buffalo',
-      description: 'These treats are made with real duck and full of vitamins and minerals to support your dog\'s healthy lifestyle. Use these Wilderness Duck Biscuit Dog Treats to reward your dog\'s good behavior. These treats contain vitamins and minerals to support your dog\'s healthy lifestyle.'
-    }, {
-      _id: '11',
       name: 'Free Range Venison',
       category: 'Treats',
       image: '/images/FreeRangeVenison.jpg',
@@ -92,7 +83,7 @@ export default {
       brand: 'Nutreats',
       description: 'Free range venison straight from New Zealand’s fertile pastures, freeze-dried for maximum nutrition, in a resealable pack. That’s it, pure and simple. Nothing artificial, no grain, no additives, colourings or preservatives. Each 50g treat pack is equivalent to 250g of raw meat, but you don’t need to keep it in the fridge. Your dog will love the natural taste, and you’ll love the fact they are getting functional health benefits from all the micronutrients.'
     }, {
-      _id: '12',
+      _id: '11',
       name: 'Adult Meat and Rice',
       category: 'Food',
       image: '/images/AdultMeatandRice.jpg',
@@ -100,7 +91,7 @@ export default {
       brand: 'Pedigree',
       description: 'Featuring many nutrients, such as Omega 6, Zinc, Calcium, Phosphorous and dietary fibres essential for your dog’s proper growth, the Pedigree Adult Meat and Rice dog food will keep your pet healthy and happy. It is good for your dog’s fur, bones, teeth, digestive tract and muscles. Not only that, it also boosts your canine’s immunity.'
     }, {
-      _id: '13',
+      _id: '12',
       name: 'Puppy Nutrition',
       category: 'Food',
       image: '/images/PuppyNutrition.jpg',
@@ -108,7 +99,7 @@ export default {
       brand: 'Drools',
       description: 'A complete and balanced nutrition helps in puppies’ growth and development. DHA helps in Brain Development. Highly palatable and easily digestible. Vitamins, Antioxidants and other essential ingredients strengthen immune system. The kibbles help to control tartar build-up. Suitable for all breeds'
     }, {
-      _id: '14',
+      _id: '13',
       name: 'Junior Giant',
       category: 'Food',
       image: '/images/JuniorGiant.jpg',
@@ -116,7 +107,7 @@ export default {
       brand: 'Royal Canin',
       description: 'ROYAL CANIN® Giant Junior contains a patented complex of specific antioxidants – including the highly beneficial vitamin E – to help support your puppy’s natural defences while they’re still developing. Thanks to a specifically adapted energy content, ROYAL CANIN® Giant Junior helps to support your puppy’s high growth rate during the second stage of growth.'
     }, {
-      _id: '15',
+      _id: '14',
       name: 'Fleece Coat Teal',
       category: 'Clothing',
       image: '/images/FleeceCoatTeal.jpg',
@@ -124,7 +115,7 @@ export default {
       brand: 'Panache Dog',
       description: 'The Panache teal fleece dog coat is made of a luxuriously soft, yet heavy, thick, breathable 300 count polar fleece fabric, for maximum warmth. ( 100 % polyester ) This fleece will not pill, it will not shrink and the color will not bleed. Our signature coat sports a rib knit turtle neck that rolls down for extra warmth, and is ideal for all neck sizes. Designed for maximum protection to ensure your dog is covered from neck to tail, with a chest protector, and an adjustable belt for a snug fit. Easy on and off, machine washable.'
     }, {
-      _id: '16',
+      _id: '15',
       name: 'Yakima Coat',
       category: 'Clothing',
       image: '/images/YakimaCoat.jpg',

@@ -3,10 +3,11 @@ import axios from 'axios';
 
 
 function AdminScreen(props) {
-let keys = [];
-let values = [];
   
+  const [time,setTime] = useState([]);
+  const [actions,setActions] = useState([]);
   const [users, setUsers] = useState([]);
+  const[user,setUser] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       await axios.get("/allusers").then((response)=> {
@@ -15,9 +16,10 @@ let values = [];
         console.log(error);
       });
     } 
+
     fetchData();
     return () => {};
-  },[]);
+  },[user]);
   /**
    * adminLogs.forEach((userLog) => {
     //console.log(userLog);
@@ -27,56 +29,38 @@ let values = [];
     //console.log(values);
     }); 
    */
-  
 
-
-  return <div className = 'adminScreen'>
-    <select name="users" id="users" onChange = { async (e) => {
-      await axios.get(`/userlog/${e}`).then((response)=>console.log(response,
-        (error)=> alert(error)));
-      }}>
-      <option value="" disabled selected hidden>Choose user...</option>
+  return <div>
+    <label>Users:</label>
+    <select id="users">
         {users?.map((user) =>
-        <option value="username">{user}</option>
+        <option key={user} disabled>{user}</option>
         )}
     </select>
-    
-    <div >
-      <table className = "admin-panel-table">
-        <tbody>
 
-        
-        </tbody>
-   </table>
-  </div>
+<input type="text" id="search"  onChange={(e) => setUser(e.target.value)} required>
+            </input>
+            <button type="submit" className="searchButton" onClick = { 
+              async () => {
+                  await axios.get(`/userlog/${user}`).then((response)=>{
+                  console.log(`Give me logs for ${user}`);
+                  console.log(Object.values(response.data));
+                  setTime(Object.keys(response.data));
+                  setActions(Object.values(response.data));
+                },
+                  (error)=>
+                  alert(error)
+                );
+              }
+            }><span role="img" aria-label="magnifyingglass">🔍</span></button>
+<table >
+  <tbody>
+  {actions?.map((action,index) => 
+        <tr key={action} >{action}</tr>
+      )}
+  </tbody>
+</table>
 </div>
 }
 
 export default AdminScreen;
-
-/**
- * { adminLogs.map((userLog) => 
-         <tr key={userLog.user}>
-          <td className="admin-panel-table-elements"><div>{userLog.user}</div></td>
-          { (keys).map((element) => 
-          <td className="admin-panel-table-elements"><div>{element}</div></td>  
-          )}
-          </tr>
-        )}
-
- * 
- * 
- * 
-
-
-
-
-
- logs ? 
-
-: "No logs to display"
- * userLog.map((element) => <tr>
-             <td>userLog</td>
-           </tr>
-         )
- */
