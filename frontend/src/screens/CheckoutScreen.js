@@ -15,10 +15,10 @@ function CheckoutScreen(props) {
       const { data } = await axios.get("/api/cart");
       setCart(data);
       await axios.get("/getshipping").then((response)=>{
-        setAddress(response.address);
-        setCity(response.city);
-        setPostalCode(response.postalCode);
-        setCountry(response.country);
+        setAddress(response.data.address);
+        setCity(response.data.city);
+        setPostalCode(response.data.postalCode);
+        setCountry(response.data.country);
       },(error)=>{
         console.log("No shipping details to display")
       });
