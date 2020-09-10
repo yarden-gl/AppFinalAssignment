@@ -72,7 +72,27 @@ app.get("/adminpanel", (req, res) => {
     }
 })
 
-// Done
+// returns array of all user names
+app.get("/allusers", (req, res) => {
+    if (req.session.username != 'admin'){ res.status(403).send('forbidden, please login')}
+    else {
+        redisClient.HKEYS("users", (err, reply) => {
+            if (err) { res.status(500).send(serverError); }
+            res.status(200).send(reply);
+        })
+    }
+});
+// returns an object with time:action 
+app.get("/userlog/:username", (req, res) => {
+    if (req.session.username != 'admin'){ res.status(403).send('forbidden, please login')}
+    else {
+        redisClient.HGETALL(req.params.username + "-log", (err, reply) => {
+            if (err) { res.status(500).send(serverError); }
+            res.status(200).send(reply);            
+        })
+    }
+});
+
 // Returns all products to display in HomeScreen 
 app.get("/api/products", (req, res) => {
     if (!req.session.username){ res.status(403).send('forbidden, please login')}
@@ -215,7 +235,6 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    // console.log(`User with username ${req.body.username} and password ${req.body.password} registered`);
     // check if username already exists
     console.log(req.session)
     redisClient.HEXISTS("users", req.body.username, (err, reply) => {
