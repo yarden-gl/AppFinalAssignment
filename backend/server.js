@@ -55,7 +55,7 @@ app.get("/isadmin", (req, res) => {
 });
 
 app.get("/adminpanel", (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let result = {};
         redisClient.scan(0, "match", '*-log', function (err, userNames) {
@@ -74,7 +74,7 @@ app.get("/adminpanel", (req, res) => {
 
 // returns array of all user names
 app.get("/allusers", (req, res) => {
-    if (req.session.username != 'admin'){ res.status(403).send('forbidden, please login')}
+    if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
     else {
         redisClient.HKEYS("users", (err, reply) => {
             if (err) { res.status(500).send(serverError); }
@@ -84,18 +84,18 @@ app.get("/allusers", (req, res) => {
 });
 // returns an object with time:action 
 app.get("/userlog/:username", (req, res) => {
-    if (req.session.username != 'admin'){ res.status(403).send('forbidden, please login')}
+    if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
     else {
         redisClient.HGETALL(req.params.username + "-log", (err, reply) => {
             if (err) { res.status(500).send(serverError); }
-            res.status(200).send(reply);            
+            res.status(200).send(reply);
         })
     }
 });
 
 // Returns all products to display in HomeScreen 
 app.get("/api/products", (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         res.send(data.products);
     }
@@ -103,7 +103,7 @@ app.get("/api/products", (req, res) => {
 
 // Returns products in current order to display in cart
 app.get("/api/cart", (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let userName = req.session.username;
         let userCart;
@@ -128,7 +128,7 @@ app.get("/api/cart", (req, res) => {
 
 // Returns products that fit the given search parameter
 app.get("/api/search/", (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         res.send(data.products);
     }
@@ -136,7 +136,7 @@ app.get("/api/search/", (req, res) => {
 
 // Returns products that fit the given search parameter
 app.get("/api/search/:parameter", (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let parameter = req.params.parameter;
         parameter = parameter.toLowerCase();
@@ -153,15 +153,15 @@ app.get("/api/search/:parameter", (req, res) => {
 //---------------------------- Post Requests ----------------------------
 
 // Add product with :productId to cart and set quantity to 1
-app.post('/cart/:productId', (req, res) => {
-    if (!req.session.username){ res.status(403).send('forbidden, please login')}
+app.post('/cart/:productid', (req, res) => {
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let userName = req.session.username;
-        let product = req.params.productId;
+        let product = req.params.productid;
         redisClient.hincrby(userName + "-cart", product, 1, (err, reply) => {
             if (err) { res.status(500).send(serverError) }
             redisClient.HSET(req.session.username + "-log", moment().format(),
-                `add product #${req.params.productId} to cart`, (err, reply) => {
+                `add product #${req.params.productid} to cart`, (err, reply) => {
                     if (err) { res.status(500).send(serverError); }
                 });
             res.status(200).end();
@@ -170,7 +170,7 @@ app.post('/cart/:productId', (req, res) => {
 });
 
 // TODO  --> admin updates a product. Need to change data.js file
-app.post('/updateProduct/:productId', (req, res) => {
+app.post('/updateproduct/:productid', (req, res) => {
     redisClient.hset(userName + "-cart", product, 1, (err, reply) => {
         if (err) { res.status(500).send(serverError) }
         res.status(200).end();
@@ -180,39 +180,41 @@ app.post('/updateProduct/:productId', (req, res) => {
 });
 
 // Set product's quantity to :quantity in cart
-app.post('/cart-quantity/:productId/:quantity', (req, res) => {
-    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
-    let userName = req.session.username;
-    let allProducts = data.products;
-    console.log("inside quantity route")
-    redisClient.hset(userName + "-cart", req.params.productId, req.params.quantity, (err, reply) => {
-        if (err) { res.status(500).send(serverError); }
-        res.status(200).end();
-    })
+app.post('/cart-quantity/:productid/:quantity', (req, res) => {
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    else {
+        let userName = req.session.username;
+        console.log("inside quantity route")
+        redisClient.hset(userName + "-cart", req.params.productid, req.params.quantity, (err, reply) => {
+            if (err) { res.status(500).send(serverError); }
+            res.status(200).end();
+        })
+    }
 });
 
-app.post('/cart/remove/:productId', (req, res) => {
-    // if (!req.session.username){ res.status(403).send('forbidden, please login')}
-    let userName = req.session.username;
-    let allProducts = data.products;
-    redisClient.hdel(userName + "-cart", req.params.productId, (err, reply) => {
-        if (err) { res.status(500).send(serverError) }
-        redisClient.HGETALL(userName + "-cart", (err, userCart) => {
-            if (err) { res.status(500).send(serverError); }
-            if (userCart) {
-                let addedProductIds = Object.keys(userCart);
-                let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
-                redisClient.HSET(req.session.username + "-log", moment().format(),
-                    `remove product #${req.params.productId} from cart`, (err, reply) => {
-                        if (err) { res.status(500).send(serverError); }
-                    });
-                res.status(200).send(results);
-            } else {
-                res.status(200).send([]);
-            }
+app.post('/cart/remove/:productid', (req, res) => {
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    else {
+        let userName = req.session.username;
+        let allProducts = data.products;
+        redisClient.hdel(userName + "-cart", req.params.productid, (err, reply) => {
+            if (err) { res.status(500).send(serverError) }
+            redisClient.HGETALL(userName + "-cart", (err, userCart) => {
+                if (err) { res.status(500).send(serverError); }
+                if (userCart) {
+                    let addedProductIds = Object.keys(userCart);
+                    let results = allProducts.filter(allProducts => addedProductIds.includes(allProducts._id));
+                    redisClient.HSET(req.session.username + "-log", moment().format(),
+                        `remove product #${req.params.productid} from cart`, (err, reply) => {
+                            if (err) { res.status(500).send(serverError); }
+                        });
+                    res.status(200).send(results);
+                } else {
+                    res.status(200).send([]);
+                }
+            })
         })
-
-    })
+    }
 });
 
 app.post('/signin', (req, res) => {
@@ -224,7 +226,7 @@ app.post('/signin', (req, res) => {
             redisClient.HSET(req.session.username + "-log", moment().format(), "logged in", (err, reply) => {
                 if (err) { res.status(500).send(serverError); }
             });
-            if (req.body.remember){
+            if (req.body.remember) {
                 req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
             }
             res.status(200).end();
@@ -244,7 +246,7 @@ app.post('/register', (req, res) => {
     redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
         if (err) { res.status(500).send(serverError); }
         req.session.username = req.body.username;
-        if (req.body.remember){
+        if (req.body.remember) {
             req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
         }
         res.status(201).end();
@@ -259,19 +261,25 @@ app.post('/checkout', (req, res) => {
 });
 
 // creates shipping value under user name table
-app.post('/updateShipping', (req, res) => {
-    let userName = req.session.userame;
-    redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err) => {
-        if (err) { res.status(500).send(serverError) }
-    })
+app.post('/updateshipping', (req, res) => {
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    else {
+        let userName = req.session.userame;
+        redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err) => {
+            if (err) { res.status(500).send(serverError) }
+        })
+    }
 })
 
-app.get('/getShipping', (req, res) => {
-    let userName = req.session.userame;
-    redisClient.HGET(userName, "shipping", (err, reply) => {
-        if (err) { res.status(500).send(serverError) }
-        res.status(200).send(JSON.parse(reply));
-    })
+app.get('/getshipping', (req, res) => {
+    if (!req.session.username) { res.status(403).send('forbidden, please login') }
+    else {
+        let userName = req.session.userame;
+        redisClient.HGET(userName, "shipping", (err, reply) => {
+            if (err) { res.status(500).send(serverError) }
+            res.status(200).send(JSON.parse(reply));
+        })
+    }
 })
 
 app.delete('/logout', (req, res) => {
