@@ -1,211 +1,59 @@
 const app = require ('../server.js');
-const data  = require('../../data.js').default;
-const request = require('request');
-const baseRoute = "http://localhost:5000";
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 const expect = chai.expect
 chai.use(chaiHttp)
+
+describe("Testing session forbidding", () => {
+	it("should return 403 because lack of session", async () => {
+            let res = await chai
+                .request(app)
+                .get('/api/cart')
+            expect(res.status).to.equal(403);
+        })
+})
 
 describe("Testing register user and login", () => {
 	it("should return status 201 when registering a new user", async () => {
     	let res = await chai
         	.request(app)
         	.post('/register')
-        	.send({ username: 'john', password: 'smith', remember: true })
+        	.send({ username: 'testuser', password: 'smith', remember: true })
     	expect(res.status).to.equal(201)
     })
     it("should return status 200 when logging in", async () => {
     	let res = await chai
         	.request(app)
         	.post('/signin')
-        	.send({ username: 'john', password: 'smith', remember: true })
+        	.send({ username: 'testuser', password: 'smith', remember: true })
         expect(res.status).to.equal(200)
         expect(res).to.have.cookie('connect.sid');
     })
 })
-
 
 describe("Testing wrong user credentials and existing register", () => {
 	it("should return status 404 when wrong credentials are entered", async () => {
     	let res = await chai
         	.request(app)
         	.post('/login')
-        	.send({ username: 'john', password: 'wrong', remember: true })
+        	.send({ username: 'testuser', password: 'wrong', remember: true })
     	expect(res.status).to.equal(404)
     })
+
     it("should return status 409 when existing user tries to register", async () => {
     	let res = await chai
         	.request(app)
         	.post('/register')
-        	.send({ username: 'john', password: 'smith', remember: true })
+        	.send({ username: 'testuser', password: 'smith', remember: true })
     	expect(res.status).to.equal(409)
     })
 })
- 
-describe("Testing product functionality", () => {
-	it("should return the user logs", async () => {
+
+describe("Deleting user for next cycle", () => {
+	it("should return 200 after deleting testuser", async () => {
             let res = await chai
                 .request(app)
-                .get('/userlog/')
-                .url("john")
-            expect(res.status).to.equal(200)
-            console.log(res)
+                .delete('/deleteuser')
+            expect(res.status).to.equal(200);
         })
 })
-
-    // it("should return status 409 when existing user tries to register", async () => {
-    // 	let res = await chai
-    //     	.request(app)
-    //     	.post('/register')
-    //     	.send({ username: 'john', password: 'smith', remember: true })
-    // 	expect(res.status).to.equal(409)
-    // })
-
-
-
-
-// describe('User register and sign up', function () {
-//     //   it('should get 409 for existing user', function (done) {
-//     //     request.post(baseRoute + '/register ', (err, res, body) => {
-//     //       expect(res.status).to.equal(409);
-//     //     });
-//     //     done();
-//     //   })
-
-//       it('should get 409 for existing user', function (done) {
-//         chai.
-//         chai.reqrequest(baseRoute + '/register ').postambleCRLF
-//         .send
-//         , (err, res, body) => {
-//           expect(res.status).to.equal(409);
-//         });
-//         done();
-//       })
-//     })
-    // it('should receive 0 user connections when before start', function (done) {
-    //     request.get('http://localhost:8080/calc/users-number', function (err, res, body) {
-    //       expect(res.status).to.equal(200);
-    //       expect(body).to.equal("0");
-    //       done();
-    //     });
-    //   });
-    // })
-
-//     const r = request.post(baseRoute + '/register', (err, res, body) => {
-//         expect(res.status).to.equal(409);
-//       });
-//     const form = r.form()
-//     form.append({"username":"pal","password":"pal","remember":true})
-
-// });
-
-// describe('Testing full basic flow', function () {
-//   let uniqueUser = "";
-//   it('should create a unique user and get the string', function (done) {
-//     request.get('http://localhost:8080/start', function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       uniqueUser = body;
-//       done();
-//     });
-//   });
-
-//   it('should add 10 to the unique user', function (done) {
-//     let postUrl = 'http://localhost:8080/calc/' + uniqueUser + '/add/10';
-//     request.post(postUrl, function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("10");
-//       done();
-//     });
-//   });
-
-
-
-//   it('should divide by 3 the unique user value', function (done) {
-//     let putUrl = 'http://localhost:8080/calc/' + uniqueUser + '/divide/3';
-//     request.put(putUrl, function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("3");
-//       done();
-//     });
-//   });
-
-//   it('should multiply by 10 the unique user value', function (done) {
-//     let putUrl = 'http://localhost:8080/calc/' + uniqueUser + '/multiply/10';
-//     request.put(putUrl, function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("30");
-//       done();
-//     });
-//   });
-
-//   it('should return the current value: 30', function (done) {
-//     let getUrl = 'http://localhost:8080/calc/' + uniqueUser + '/M';
-//     request.get(getUrl, function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("30");
-//       done();
-//     });
-//   });
-
-//   it('should reset the user value to 0', function (done) {
-//     let postUrl = 'http://localhost:8080/calc/' + uniqueUser + '/reset';
-//     request.post(postUrl, function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("0");
-//       done();
-//     });
-//   });
-
-//   it('should delete the user from the map', function (done) {
-//     let delUrl = 'http://localhost:8080/calc/' + uniqueUser + '/del';
-//     request.delete(delUrl, function (err, res) {
-//       expect(res.status).to.equal(200);
-//       done();
-//     });
-//   });
-
-// })
-
-// describe('Testing addition of 5 users', function () {
-
-//   it('should add 5 new unique users', function (done) {
-//     let usersToAdd = 5;
-//     let uniqueUser;
-//     while (usersToAdd > 0) {
-//       request.get('http://localhost:8080/start', function (err, res, body) {
-//         uniqueUser = body;
-//         usersMap.set(uniqueUser, 0);
-//         expect(res.status).to.equal(200);
-//       });
-//       usersToAdd--;
-//     }
-//     done();
-//   });
-
-//   it('should receive 5 user connections', function (done) {
-//     request.get('http://localhost:8080/calc/users-number', function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("5");
-//       done();
-//     });
-//   });
-
-//   it('should delete 5 users from the user connections', function (done) {
-//       usersMap.forEach(function(value, key, map){
-//         let delUrl = 'http://localhost:8080/calc/' + key + '/del';
-//         request.delete(delUrl, function (err, res) {
-//           expect(res.status).to.equal(200);
-//         });
-//       })
-//     done();
-//   });
-
-//   it('should receive 0 user connections after deleting', function (done) {
-//     request.get('http://localhost:8080/calc/users-number', function (err, res, body) {
-//       expect(res.status).to.equal(200);
-//       expect(body).to.equal("0");
-//       done();
-//     });
-//   });
-// });
