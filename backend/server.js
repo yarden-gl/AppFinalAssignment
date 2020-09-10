@@ -59,7 +59,9 @@ app.get("/isadmin", (req, res) => {
         if (req.session.username == "admin") {
             res.send(true)
         } else { res.send(false) }
-    } catch (error) {}
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 // returns array of all user names
