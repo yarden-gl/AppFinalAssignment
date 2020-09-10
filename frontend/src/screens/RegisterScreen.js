@@ -7,6 +7,7 @@ function RegisterScreen(props) {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [retype, setRetype] = useState('');
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -30,20 +31,28 @@ function RegisterScreen(props) {
           </input>
         </li>
         <li>
+          <label htmlFor="repassword">Retype Password</label>
+          <input type="repassword" id="repassword" name="repassword" onChange={(e) => setRetype(e.target.value)} required>
+          </input>
+        </li>
+        <li>
           <button type="submit" className="button primary" onClick={
               async () => {
-                if(document.getElementById("username").value && document.getElementById("password").value) {
-                  await axios.post('/register', {
-                    username: username,
-                      password: password,
-                      remember: document.getElementById("remember").checked,
-                    }).then((response) => {
-                      alert(`Thanks for registering, ${username}! Enjoy Doggy Delights!`);
-                      window.location = '/homescreen';
-                    }, (error) => {
-                      alert(error);
-                      console.log(error);
-                    });
+                if(username && password && retype) {
+                  if(password === retype) {
+                    await axios.post('/register', {
+                      username: username,
+                        password: password,
+                        remember: document.getElementById("remember").checked,
+                      }).then((response) => {
+                        alert(`Thanks for registering, ${username}! Enjoy Doggy Delights!`);
+                        window.location = '/homescreen';
+                      }, (error) => {
+                        alert(error);
+                        console.log(error);
+                      });
+                  } else 
+                  alert("Passwords do no match");
                 }
                 else {
                   alert("Please insert username and password")

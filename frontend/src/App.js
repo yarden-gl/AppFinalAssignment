@@ -43,7 +43,7 @@ function App() {
                 await axios.get(`/api/products`).then((response)=>
                 window.location="/homescreen", 
                   (error)=>
-                  alert("Please signin")
+                  alert("Please sign in")
                 );
                 
               }
@@ -55,7 +55,7 @@ function App() {
                 await axios.get(`/api/search/${input.value}`).then((response)=>
                   window.arr = response,
                   (error)=>
-                  alert(error)
+                  alert("Please sign in")
                 );
               }
             }><span role="img" aria-label="magnifyingglass">🔍</span></button>
@@ -68,7 +68,7 @@ function App() {
               async ()=> {
                 await axios.get(`/api/cart`).then((response)=>
                 window.location = ('/cart'),
-                (error)=>alert(error));
+                (error)=>alert("Please sign in"));
               }
             }>Cart</Link>
             <Link onClick={

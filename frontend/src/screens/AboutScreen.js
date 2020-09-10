@@ -1,7 +1,11 @@
 import React from 'react';
-
+import { Link} from 'react-router-dom';
 function AboutScreen(props) {
-  return <div className="about"> <br></br><br></br>
+  return <div>
+  <div className="back-to-signin">
+  <Link to="/">Back</Link>
+</div>
+  <div className="about"> 
   Doggy Delights is a one-stop shop for all your canine needs!
     Whether it's a collar sporting your favorite pattern, a warm coat for the winter months, or treats for your pet's training.
     <br></br><br></br>
@@ -15,7 +19,7 @@ function AboutScreen(props) {
     Yarden and Dave
     <br></br><br></br>
     302328901 308152859
-  </div>
+  </div></div>
 }
 
 export default AboutScreen;
