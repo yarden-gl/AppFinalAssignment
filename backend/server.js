@@ -1,4 +1,5 @@
-import data from '../data';
+// import data from '../data';
+const data  = require('../data.js').default;
 const redis = require('redis');
 const express = require('express');
 const app = express();
@@ -6,7 +7,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const CryptoJS = require("crypto-js");
 const redisClient = redis.createClient();
-const async = require('async');
 const moment = require('moment');
 let RedisStore = require('connect-redis')(session)
 const serverError = 'Internal server error';
