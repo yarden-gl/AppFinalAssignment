@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link} from 'react-router-dom'; 
 import axios from 'axios';
 
 
@@ -12,7 +13,9 @@ function RegisterScreen(props) {
   const submitHandler = (e) => {
     e.preventDefault();
   }
-  return <div className="form">
+  return <div><div className="back-to-result">
+  <Link to="/">Back</Link></div>
+  <div className="form">
     <form onSubmit={submitHandler} >
       <ul className="form-container">
         <li>
@@ -32,7 +35,7 @@ function RegisterScreen(props) {
         </li>
         <li>
           <label htmlFor="repassword">Retype Password</label>
-          <input type="repassword" id="repassword" name="repassword" onChange={(e) => setRetype(e.target.value)} required>
+          <input type="password" id="repassword" name="repassword" onChange={(e) => setRetype(e.target.value)} required>
           </input>
         </li>
         <li>
@@ -65,6 +68,7 @@ function RegisterScreen(props) {
 
       </ul>
     </form>
+  </div>
   </div>
 }
 export default RegisterScreen;
