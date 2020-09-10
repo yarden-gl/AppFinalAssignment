@@ -51,8 +51,7 @@ function RegisterScreen(props) {
                         alert(`Thanks for registering, ${username}! Enjoy Doggy Delights!`);
                         window.location = '/homescreen';
                       }, (error) => {
-                        alert(error);
-                        console.log(error);
+                        alert(`User with username ${username} already exists`);
                       });
                   } else 
                   alert("Passwords do no match");

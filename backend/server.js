@@ -253,7 +253,7 @@ app.post('/register', (req, res) => {
         // check if username already exists
         redisClient.HEXISTS("users", req.body.username, (err, reply) => {
             if (err) { throw err }
-            if (reply == 1) { res.status(409).send('username already exists'); }
+            if (reply == 1) { res.status(409).send('Username already exists'); }
             else {
                 redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
                     if (err) { throw err }
