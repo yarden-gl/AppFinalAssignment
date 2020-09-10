@@ -59,9 +59,11 @@ app.get('/readme', (req, res) => {
 });
 
 app.get("/isadmin", (req, res) => {
-    if (req.session.username == "admin") {
-        res.send(true)
-    } else { res.send(false) }
+    try {
+        if (req.session.username == "admin") {
+            res.send(true)
+        } else { res.send(false) }
+    } catch (error) {}
 });
 
 // returns array of all user names
@@ -74,9 +76,10 @@ app.get("/allusers", (req, res) => {
         })
     }
 });
-// returns an object with time:action 
+
+// returns an object with the user logs in time:action format
 app.get("/userlog/:username", (req, res) => {
-    console.log(req.username.params)
+    console.log(req.params.username)
     if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
     else {
         redisClient.HGETALL(req.params.username + "-log", (err, reply) => {
@@ -119,7 +122,7 @@ app.get("/api/cart", (req, res) => {
     }
 });
 
-// Returns products that fit the given search parameter
+// Returns products that fit search parameter
 app.get("/api/search/", (req, res) => {
     if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
@@ -145,7 +148,7 @@ app.get("/api/search/:parameter", (req, res) => {
 
 //---------------------------- Post Requests ----------------------------
 
-// Add product with :productId to cart and set quantity to 1
+// Add product with :productId to user cart and set quantity to 1
 app.post('/cart/:productid', (req, res) => {
     if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
@@ -175,7 +178,7 @@ app.post('/updateproduct/:productid', (req, res) => {
     }
 });
 
-// Set product's quantity to :quantity in cart
+// Set product's quantity to :quantity in user cart
 app.post('/cart-quantity/:productid/:quantity', (req, res) => {
     try {
         if (!req.session.username) { res.status(403).send('forbidden, please login') }
@@ -192,6 +195,7 @@ app.post('/cart-quantity/:productid/:quantity', (req, res) => {
     }
 });
 
+// remove cart from redis db according to product id
 app.post('/cart/remove/:productid', (req, res) => {
     try {
         if (!req.session.username) { res.status(403).send('forbidden, please login') }
@@ -221,6 +225,7 @@ app.post('/cart/remove/:productid', (req, res) => {
     }
 });
 
+// sign in with remember me trigerring 1 year cookie maxage
 app.post('/signin', (req, res) => {
     try {
         redisClient.hget("users", req.body.username, (err, reply) => {
@@ -242,12 +247,13 @@ app.post('/signin', (req, res) => {
     }
 });
 
+// register a new user, encrypt the password, return 409 if exists
 app.post('/register', (req, res) => {
-    console.log(req.body.username)
     try {
         // check if username already exists
         redisClient.HEXISTS("users", req.body.username, (err, reply) => {
-            if (reply == 1) { res.send("User with this name already exists").end(); }
+            if (err) { throw err }
+            if (reply == 1) { res.status(409).send('username already exists'); }
             else {
                 redisClient.hset("users", req.body.username, encrypter(req.body.password), (err, reply) => {
                     if (err) { throw err }
@@ -264,14 +270,17 @@ app.post('/register', (req, res) => {
     }
 });
 
+// checkout + log the action + delete the user cart.
 app.post('/checkout', (req, res) => {
     console.log("inside checkout")
-    console.log(req.session.username)
-    console.log(req.body.amount)
+    let userName = req.session.username;
     try {
-        redisClient.HSET(req.session.username + "-log", moment().format(),
+        redisClient.HSET(userName + "-log", moment().format(),
         `place order for ${req.body.amount} nis`, (err) => {
             if (err) { throw err };
+            redisClient.DEL(userName + "-cart", (reply, err) =>{
+                if (err) { throw err };
+            });
         });
         res.end();
     } catch (error) {
@@ -279,7 +288,7 @@ app.post('/checkout', (req, res) => {
     }
 });
 
-// creates shipping value under user name table
+// add shipping details for user under shipping table
 app.post('/updateshipping', (req, res) => {
     let userName = req.session.username;
     try {
@@ -295,6 +304,7 @@ app.post('/updateshipping', (req, res) => {
     }
 })
 
+// returns shipping details of user and populates in the form
 app.get('/getshipping', (req, res) => {
     let userName = req.session.username;
     try {
@@ -311,6 +321,7 @@ app.get('/getshipping', (req, res) => {
     }
 })
 
+// destroys the session on the server and also clears the user cookie
 app.delete('/logout', (req, res) => {
     try {
         let userName = req.session.username;
