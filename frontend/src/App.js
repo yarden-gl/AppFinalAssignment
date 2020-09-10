@@ -36,17 +36,27 @@ function App() {
       <div className="grid-container">
         <header className="header">
           <div className="brand">
-            <Link to="/homescreen" onClick={
+            <Link onClick={
               async () => {
                 window.arr=undefined;
                 document.getElementById("search").value="";
+                await axios.get(`/api/products`).then((response)=>
+                window.location="/homescreen", 
+                  (error)=>
+                  alert("Please signin")
+                );
+                
               }
             }>Doggy Delights</Link>
             <input className="searchBar" type="text" placeholder="Search.." id="search"></input>
             <button type="submit" className="searchButton" onClick = { 
               async () => {
                 let input = document.getElementById('search');
-                window.arr = await axios.get(`/api/search/${input.value}`);
+                await axios.get(`/api/search/${input.value}`).then((response)=>
+                  window.arr = response,
+                  (error)=>
+                  alert(error)
+                );
               }
             }><span role="img" aria-label="magnifyingglass">🔍</span></button>
           </div>
@@ -54,11 +64,18 @@ function App() {
           <div className="header-links">
           <Link to="/logs" id="logs" >Logs</Link>
             <Link to="/about">About</Link>
-            <Link to="/cart">Cart</Link>
+            <Link  onClick= {
+              async ()=> {
+                await axios.get(`/api/cart`).then((response)=>
+                window.location = ('/cart'),
+                (error)=>alert(error));
+              }
+            }>Cart</Link>
             <Link onClick={
               async () => {
-                await axios.delete(`/logout`).then((response)=>console.log(response),
-                (error)=>alert(error));
+                await axios.delete(`/logout`).then((response)=>
+                console.log("See you soon!"),
+                (error)=>console.log(error));
               }
             }to="/">Log Out</Link>
           </div>

@@ -9,12 +9,13 @@ let values = [];
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-     // const { data } = await axios.get("/adminpanel");
-     // const { data } = await axios.get("/allusers");
+     // const { data } = 
+      const { data1 } = await axios.get("/allusers");
       //setLogs(data);
+      setUsers(data1);
       //setLogs([{"100":"logged in","200":"check out","user":"dave"},{"100":"logged in","200":"check out","user":"yarden"}]);
       setLogs([{"100":"logged in","200":"check out"},{"100":"logged in","200":"check out"}]);
-     setUsers(["admin","Joe","Yarden","Dave"]);
+    
     }
     fetchData();
     return () => {};
@@ -22,16 +23,15 @@ let values = [];
   adminLogs.forEach((userLog) => {
     //console.log(userLog);
     keys = Object.keys(userLog);
-    values = [Object.values(userLog)];
+    values = [Object.values(userLog)];  
    // console.log(keys);
     //console.log(values);
     }); 
   return <div className = 'adminScreen'> 
 
 <select name="users" id="users" onChange = { async (e) => {
-  await axios.get(`/adminpanel/${e}`);
-  let input = document.getElementById('adminfilter');
-                //await axios.get(`/adminfilter`);
+  await axios.get(`/userlog/${e}`).then((response)=>console.log(response,
+    (error)=> alert(error)));
 }
 
 }>
