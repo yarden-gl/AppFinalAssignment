@@ -1,4 +1,3 @@
-// import data from '../data';
 const data  = require('../data.js').default;
 const redis = require('redis');
 const express = require('express');
@@ -12,6 +11,7 @@ let RedisStore = require('connect-redis')(session)
 const serverError = 'Internal server error';
 const CryptoSalt = 'very secret stuff';
 
+// app.use('../../static', express.static(path.join(__dirname, 'public')))
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'very secrety string',
@@ -314,19 +314,15 @@ app.delete('/logout', (req, res) => {
 });
 
 // for test purposes, deleting users
-app.delete('/deleteuser/:username', (req, res) => {
+app.delete('/deleteuser', (req, res) => {
     try {
-        if (req.session.username != 'admin') { res.status(403).send('forbidden, please login') }
-        else {
-            let userName = req.params.username;
-            redisClient.HDEL("users", userName, (err, reply) =>{
+            redisClient.HDEL("users", "testuser", (err, reply) =>{
                 if (err) { throw err }
                 if (reply == 1) res.status(200).end()
                 else {
                     res.status(404).send('user not found')
                 }
             })
-        }
     } catch (error) {
         res.status(500).send(error);
     }
