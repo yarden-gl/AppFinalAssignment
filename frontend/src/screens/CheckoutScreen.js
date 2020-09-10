@@ -138,8 +138,13 @@ function CheckoutScreen(props) {
           <li>
             <button className="button primary full-width" onClick={
               async () => {
-                await axios.post("/checkout",{amount: totalPrice});
-                window.location = '/orderComplete';
+                if(shippingDetails){
+                  await axios.post("/checkout",{amount: totalPrice});
+                  window.location = '/orderComplete';
+                } else {
+                  alert("Please insert shipping details");
+                }
+             
               } 
             } >Place Order</button>
           </li>
