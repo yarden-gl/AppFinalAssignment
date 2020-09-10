@@ -18,7 +18,7 @@ function HomeScreen(props) {
     fetchData();
     return () =>{};
   },[newProducts]);
-  productLink = window.isAdmin ? "/updateProduct/" : "/product/";
+  productLink = window.isAdmin ? "/updateproduct/" : "/product/";
   newProducts = window.arr ? window.arr.data : products; 
 
   return newProducts.length > 0 ? <ul className="products">

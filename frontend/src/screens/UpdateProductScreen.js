@@ -61,7 +61,7 @@ function UpdateProductScreen(props) {
                 brand : document.getElementById('brand'),
                 description : document.getElementById('description'),
               }  
-              await axios.post("/updateProduct",newProduct).then(
+              await axios.post("/updateproduct",newProduct).then(
                 (response) => {
                   alert("Product updated");
                 }, 

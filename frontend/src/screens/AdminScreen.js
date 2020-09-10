@@ -9,13 +9,9 @@ let values = [];
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-     // const { data } = 
       const { data1 } = await axios.get("/allusers");
-      //setLogs(data);
       setUsers(data1);
-      //setLogs([{"100":"logged in","200":"check out","user":"dave"},{"100":"logged in","200":"check out","user":"yarden"}]);
-      setLogs([{"100":"logged in","200":"check out"},{"100":"logged in","200":"check out"}]);
-    
+      console.log(users);
     }
     fetchData();
     return () => {};
@@ -27,23 +23,18 @@ let values = [];
    // console.log(keys);
     //console.log(values);
     }); 
-  return <div className = 'adminScreen'> 
-
-<select name="users" id="users" onChange = { async (e) => {
-  await axios.get(`/userlog/${e}`).then((response)=>console.log(response,
-    (error)=> alert(error)));
-}
-
-}>
-<option value="" disabled selected hidden>Choose user...</option>
-  {users.map((user) =>
-
-<option value="username">{user}</option>
 
 
-  )}
- 
-</select>
+  return <div className = 'adminScreen'>
+    <select name="users" id="users" onChange = { async (e) => {
+      await axios.get(`/userlog/${e}`).then((response)=>console.log(response,
+        (error)=> alert(error)));
+      }}>
+      <option value="" disabled selected hidden>Choose user...</option>
+        {users?.map((user) =>
+        <option value="username">{user}</option>
+        )}
+    </select>
     
     <div >
       <table className = "admin-panel-table">
