@@ -72,6 +72,7 @@ function CheckoutScreen(props) {
                 
                 if(address&&city&&postalCode&&country){
                   let shippingDetails = {address,city,postalCode,country};
+                  console.log(shippingDetails)
                   await axios.post("/updateshipping",shippingDetails).then(
                     (response)=>{
                       alert("Shipping details set")

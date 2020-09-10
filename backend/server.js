@@ -147,7 +147,6 @@ app.get("/api/search/:parameter", (req, res) => {
 
 // Add product with :productId to cart and set quantity to 1
 app.post('/cart/:productid', (req, res) => {
-    console.log(req)
     if (!req.session.username) { res.status(403).send('forbidden, please login') }
     else {
         let userName = req.session.username;
@@ -244,6 +243,7 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
+    console.log(req.body.username)
     try {
         // check if username already exists
         redisClient.HEXISTS("users", req.body.username, (err, reply) => {
@@ -265,6 +265,9 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/checkout', (req, res) => {
+    console.log("inside checkout")
+    console.log(req.session.username)
+    console.log(req.body.amount)
     try {
         redisClient.HSET(req.session.username + "-log", moment().format(),
         `place order for ${req.body.amount} nis`, (err) => {
@@ -278,13 +281,14 @@ app.post('/checkout', (req, res) => {
 
 // creates shipping value under user name table
 app.post('/updateshipping', (req, res) => {
+    let userName = req.session.username;
     try {
-        if (!req.session.username) { res.status(403).send('forbidden, please login') }
+        if (!userName) { res.status(403).send('forbidden, please login') }
         else {
-            let userName = req.session.userame;
-            redisClient.HSET(userName, "shipping", JSON.stringify(req.body), (err) => {
+            redisClient.HSET("shipping-details", userName, JSON.stringify(req.body), (err) => {
                 if (err) { throw err }
             })
+            res.status(201).end();
         }
     } catch (error) {
         res.status(500).send(error);
@@ -292,12 +296,13 @@ app.post('/updateshipping', (req, res) => {
 })
 
 app.get('/getshipping', (req, res) => {
+    let userName = req.session.username;
     try {
-        if (!req.session.username) { res.status(403).send('forbidden, please login') }
+        if (!userName) { res.status(403).send('forbidden, please login') }
         else {
-            let userName = req.session.userame;
-            redisClient.HGET(userName, "shipping", (err, reply) => {
+            redisClient.HGET("shipping-details", userName, (err, reply) => {
                 if (err) { throw err }
+                console.log(JSON.parse(reply))
                 res.status(200).send(JSON.parse(reply));
             })
         }
